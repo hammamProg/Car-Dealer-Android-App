@@ -1,0 +1,210 @@
+*.iml
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+
+# Android Studio
+*.iml
+/.idea
+/.gradle
+/local.properties
+/.externalNativeBuild
+/captured-properties
+
+# Gradle
+/build/
+
+# User-specific files
+/.history
+/.DS_Store
+/build/
+
+# Signing-related files
+/keystores/
+
+# Android asset directory
+/app/build/intermediates/assets/
+
+# Compressed JSON files
+*.json.gz
+
+# Log files
+*.log
+
+# Android Studio Navigation editor temp files
+.navigation/
+
+# Android Studio captures folder
+/captures/
+
+# Intellij
+/.idea
+*.iws
+*.iml
+*.ipr
+
+# Compiled Java bytecode
+*.class
+
+# Compiled .NET bytecode
+*.dll
+*.exe
+*.pdb
+*.mdb
+
+# Visual Studio Code
+.vscode/
+
+# User-specific files
+/.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# User-specific files
+*.sublime-workspace
+
+# Flutter
+/.idea/
+/.vscode/
+/.flutter-plugins
+/.packages
+/pubspec.lock
+/syncfusion_license.txt
+/build/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.flutter-plugins-metadata
+.idea/
+.vscode/
+.pub/
+*.iml
+
+# Dart
+/pubspec.yaml
+/pubspec.lock
+
+# Flutter and Dart
+.DS_Store
+Thumbs.db/
+Desktop.ini
+.cache/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.flutter-plugins-metadata
+build/
+.history/
+
+
+# Android Studio
+*.iml
+/.idea
+/.gradle
+/local.properties
+/.externalNativeBuild
+/captured-properties
+
+# Gradle
+/build/
+
+# User-specific files
+/.history
+/.DS_Store
+/build/
+
+# Signing-related files
+/keystores/
+
+# Android asset directory
+/app/build/intermediates/assets/
+
+# Compressed JSON files
+*.json.gz
+
+# Log files
+*.log
+
+# Android Studio Navigation editor temp files
+.navigation/
+
+# Android Studio captures folder
+/captures/
+
+# Intellij
+/.idea
+*.iws
+*.iml
+*.ipr
+
+# Compiled Java bytecode
+*.class
+
+# Compiled .NET bytecode
+*.dll
+*.exe
+*.pdb
+*.mdb
+
+# Visual Studio Code
+.vscode/
+
+# User-specific files
+/.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# User-specific files
+*.sublime-workspace
+
+# Flutter
+/.idea/
+/.vscode/
+/.flutter-plugins
+/.packages
+/pubspec.lock
+/syncfusion_license.txt
+/build/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.flutter-plugins-metadata
+.idea/
+.vscode/
+.pub/
+*.iml
+
+# Dart
+/pubspec.yaml
+/pubspec.lock
+
+# Flutter and Dart
+.DS_Store
+Thumbs.db/
+Desktop.ini
+.cache/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.flutter-plugins-metadata
+build/
+.history/
+
+
