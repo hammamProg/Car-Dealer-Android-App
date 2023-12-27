@@ -15,10 +15,13 @@
         android:theme="@style/Theme.Project"
         tools:targetApi="31">
         <activity
-            android:name=".Screens.SignUp"
+            android:name=".Screens.home_screen"
             android:exported="false" />
         <activity
-            android:name=".Screens.Login"
+            android:name=".Screens.Auth.SignUp"
+            android:exported="false" />
+        <activity
+            android:name=".Screens.Auth.Login"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

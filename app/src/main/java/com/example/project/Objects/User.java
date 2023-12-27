@@ -1,7 +1,7 @@
 package com.example.project.Objects;
 
 public class User {
-    private int id;
+    private int isLoggedIn;
     private String email;
     private String firstName;
     private String lastName;
@@ -11,9 +11,10 @@ public class User {
     private String city;
     private String phoneNumber;
 
+
     // Constructor
     public User(String email, String firstName, String lastName, String gender, String password,
-                String country, String city, String phoneNumber) {
+                String country, String city, String phoneNumber,int isLoggedIn) {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -22,16 +23,7 @@ public class User {
         this.country = country;
         this.city = city;
         this.phoneNumber = phoneNumber;
-    }
-
-    // Getter and Setter methods for each attribute
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
+        this.isLoggedIn = isLoggedIn;
     }
 
     public String getEmail() {

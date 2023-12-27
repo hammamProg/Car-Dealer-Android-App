@@ -1,3 +1,37 @@
 <resources>
     <string name="app_name">Project</string>
+
+    <string-array name="gender_options">
+        <item>Male</item>
+        <item>Female</item>
+    </string-array>
+
+
+    <string-array name="country_options">
+        <item>Palestine</item>
+        <item>Jordan</item>
+        <item>Syria</item>
+        <!-- Add more countries as needed -->
+    </string-array>
+
+    <string-array name="palestine_cities">
+        <item>Gaza</item>
+        <item>Nablus</item>
+        <item>Jenin</item>
+        <!-- Add more cities for Palestine -->
+    </string-array>
+
+    <string-array name="jordan_cities">
+        <item>Amman</item>
+        <item>Irbid</item>
+        <item>Zarqa</item>
+        <!-- Add more cities for Jordan -->
+    </string-array>
+
+    <string-array name="syria_cities">
+        <item>Damascus</item>
+        <item>Aleppo</item>
+        <item>Homs</item>
+        <!-- Add more cities for Syria -->
+    </string-array>
 </resources>

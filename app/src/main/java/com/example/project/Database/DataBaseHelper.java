@@ -17,7 +17,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     // Table name and column names for user information
     private static final String TABLE_USERS = "users";
-    private static final String COLUMN_ID = "id";
     private static final String COLUMN_EMAIL = "email";
     private static final String COLUMN_FIRST_NAME = "first_name";
     private static final String COLUMN_LAST_NAME = "last_name";
@@ -26,25 +25,29 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_COUNTRY = "country";
     private static final String COLUMN_CITY = "city";
     private static final String COLUMN_PHONE_NUMBER = "phone_number";
+    private static final String COLUMN_IS_LOGGED_IN = "is_logged_in";
 
     // SQL query to create the users table
     private static final String CREATE_TABLE_USERS =
             "CREATE TABLE " + TABLE_USERS + "(" +
-                    COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    COLUMN_EMAIL + " TEXT UNIQUE," +
+                    COLUMN_EMAIL + " TEXT PRIMARY KEY," +
                     COLUMN_FIRST_NAME + " TEXT," +
                     COLUMN_LAST_NAME + " TEXT," +
                     COLUMN_GENDER + " TEXT," +
                     COLUMN_PASSWORD + " TEXT," +
                     COLUMN_COUNTRY + " TEXT," +
                     COLUMN_CITY + " TEXT," +
-                    COLUMN_PHONE_NUMBER + " TEXT" +
+                    COLUMN_PHONE_NUMBER + " TEXT," +
+                    COLUMN_IS_LOGGED_IN + " INTEGER DEFAULT 0" +  // 0 for false, 1 for true
                     ")";
+
 
 
     public DataBaseHelper(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
     }
+
+
 
     // Called when the database is created for the first time
     @Override
@@ -74,7 +77,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_CITY, user.getCity());
         values.put(COLUMN_PHONE_NUMBER, user.getPhoneNumber());
 
-        long result = db.insert(TABLE_USERS, null, values);
+        long result = db.insertWithOnConflict(TABLE_USERS, null, values, SQLiteDatabase.CONFLICT_REPLACE);
         db.close();
         return result;
     }
@@ -82,7 +85,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     // Method to check if a user with the given email and password exists in the database
     public boolean checkUser(String email, String password) {
         SQLiteDatabase db = this.getReadableDatabase();
-        String[] columns = {COLUMN_ID};
+        String[] columns = {COLUMN_EMAIL};
         String selection = COLUMN_EMAIL + " = ?" + " AND " + COLUMN_PASSWORD + " = ?";
         String[] selectionArgs = {email, password};
 
@@ -93,6 +96,4 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         return count > 0;
     }
-
-    // Additional methods for retrieving and updating user information can be added as needed
 }
