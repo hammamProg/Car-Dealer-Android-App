@@ -1,16 +1,26 @@
 package com.example.project.Database;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
 import com.example.project.Objects.User;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
+
 public class DataBaseHelper extends SQLiteOpenHelper {
+    private Context context;
     // Database name and version
     private static final String DATABASE_NAME = "Database_H&H";
     private static final int DATABASE_VERSION = 1;
@@ -43,8 +53,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
 
 
-    public DataBaseHelper(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
-        super(context, name, factory, version);
+    public DataBaseHelper(Context context) {
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        this.context = context;
     }
 
 
@@ -53,6 +64,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_TABLE_USERS);
+        Toast.makeText(context, "DataBase Initialized Success!", Toast.LENGTH_SHORT).show();
     }
 
     // Called when the database needs to be upgraded
@@ -61,6 +73,45 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         // Drop the existing tables and recreate them
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS);
         onCreate(db);
+    }
+
+    public static String hashPassword(String password) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] encodedHash = digest.digest(
+                    password.getBytes(StandardCharsets.UTF_8));
+
+            // Convert the byte array to a hexadecimal string
+            StringBuilder hexString = new StringBuilder(2 * encodedHash.length);
+            for (byte b : encodedHash) {
+                String hex = Integer.toHexString(0xff & b);
+                if (hex.length() == 1) {
+                    hexString.append('0');
+                }
+                hexString.append(hex);
+            }
+            return hexString.toString();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            // Handle the exception based on your application's needs
+            return null;
+        }
+    }
+    public boolean checkEmailExistence(String email) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String[] columns = {COLUMN_EMAIL};
+        String selection = COLUMN_EMAIL + " = ?";
+        String[] selectionArgs = {email};
+
+        Cursor cursor = db.query(TABLE_USERS, columns, selection, selectionArgs, null, null, null);
+
+        int count = cursor.getCount();
+
+        cursor.close();
+        db.close();
+
+        // If count is greater than 0, the email already exists
+        return count > 0;
     }
 
     // Method to add a new user to the database
@@ -72,7 +123,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_FIRST_NAME, user.getFirstName());
         values.put(COLUMN_LAST_NAME, user.getLastName());
         values.put(COLUMN_GENDER, user.getGender());
-        values.put(COLUMN_PASSWORD, user.getPassword());
+        values.put(COLUMN_PASSWORD, hashPassword(user.getPassword()));
         values.put(COLUMN_COUNTRY, user.getCountry());
         values.put(COLUMN_CITY, user.getCity());
         values.put(COLUMN_PHONE_NUMBER, user.getPhoneNumber());
@@ -83,10 +134,66 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
 
     // Method to check if a user with the given email and password exists in the database
-    public boolean checkUser(String email, String password) {
+    public boolean loginUser(String email, String password) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String[] columns = {COLUMN_EMAIL, COLUMN_IS_LOGGED_IN};
+        String selection = COLUMN_EMAIL + " = ? AND " + COLUMN_PASSWORD + " = ?";
+        String[] selectionArgs = {email, hashPassword(password)};
+
+        Log.d("email", email);
+        Log.d("password", hashPassword(password));
+
+        try (Cursor cursor = db.query(TABLE_USERS, columns, selection, selectionArgs, null, null, null)) {
+            if (cursor.moveToFirst()) {
+                // User with the provided email and password exists
+                int isLoggedInColumnIndex = cursor.getColumnIndex(COLUMN_IS_LOGGED_IN);
+
+                if (isLoggedInColumnIndex != -1) {
+                    int isLoggedIn = cursor.getInt(isLoggedInColumnIndex);
+
+                    if (isLoggedIn == 0) {
+                        // Update the user's login status to 1
+                        ContentValues values = new ContentValues();
+                        values.put(COLUMN_IS_LOGGED_IN, 1);
+
+                        db.update(TABLE_USERS, values, COLUMN_EMAIL + " = ?", new String[]{email});
+                        Log.d("db", "updated");
+
+                        // Return true to indicate successful login
+                        return true;
+                    } else {
+                        // User is already logged in
+                        Log.d("db", "User is already logged in");
+
+                        // Return false to indicate that the user is already logged in
+                        return false;
+                    }
+                } else {
+                    // Handle the case where the column index is not found
+                    Log.e("db", "Column index for COLUMN_IS_LOGGED_IN not found");
+
+                    // Return false to indicate login failure
+                    return false;
+                }
+            } else {
+                // No user found with the provided email and password
+                Log.d("db", "No user found with the provided email and password");
+
+                // Return false to indicate login failure
+                return false;
+            }
+        } finally {
+            db.close();
+        }
+    }
+
+
+    // Method to check if a user with the given email and password exists in the database
+    public boolean getAllUsers(String email, String password) {
         SQLiteDatabase db = this.getReadableDatabase();
         String[] columns = {COLUMN_EMAIL};
         String selection = COLUMN_EMAIL + " = ?" + " AND " + COLUMN_PASSWORD + " = ?";
+
         String[] selectionArgs = {email, password};
 
         Cursor cursor = db.query(TABLE_USERS, columns, selection, selectionArgs, null, null, null);
@@ -96,4 +203,47 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         return count > 0;
     }
+
+    // Method to get all users from the database
+    public List<User> getAllUsers() {
+        List<User> userList = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        String[] columns = {COLUMN_EMAIL,COLUMN_PASSWORD, COLUMN_FIRST_NAME, COLUMN_LAST_NAME, COLUMN_GENDER,
+                COLUMN_COUNTRY, COLUMN_CITY, COLUMN_PHONE_NUMBER};
+
+        try (Cursor cursor = db.query(TABLE_USERS, columns, null, null, null, null, null)) {
+            int emailIndex = cursor.getColumnIndex(COLUMN_EMAIL);
+            int firstNameIndex = cursor.getColumnIndex(COLUMN_FIRST_NAME);
+            int passwordIndex = cursor.getColumnIndex(COLUMN_PASSWORD);
+            int lastNameIndex = cursor.getColumnIndex(COLUMN_LAST_NAME);
+            int genderIndex = cursor.getColumnIndex(COLUMN_GENDER);
+            int countryIndex = cursor.getColumnIndex(COLUMN_COUNTRY);
+            int cityIndex = cursor.getColumnIndex(COLUMN_CITY);
+            int phoneNumberIndex = cursor.getColumnIndex(COLUMN_PHONE_NUMBER);
+
+            while (cursor.moveToNext()) {
+                String email = cursor.getString(emailIndex);
+                String password = cursor.getString(passwordIndex);
+                String firstName = cursor.getString(firstNameIndex);
+                String lastName = cursor.getString(lastNameIndex);
+                String gender = cursor.getString(genderIndex);
+                String country = cursor.getString(countryIndex);
+                String city = cursor.getString(cityIndex);
+                String phoneNumber = cursor.getString(phoneNumberIndex);
+
+                User user = new User(email, firstName, lastName, gender, password, country, city, phoneNumber);
+                userList.add(user);
+            }
+        } catch (Exception e) {
+            Log.e("Database Error", "Error fetching all users", e);
+        } finally {
+            db.close();
+        }
+
+        return userList;
+    }
+
+
+
+
 }

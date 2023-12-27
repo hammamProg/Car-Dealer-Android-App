@@ -99,6 +99,7 @@ public class SignUp extends AppCompatActivity {
 
     }
     private void signUp() {
+        DataBaseHelper dbHelper = new DataBaseHelper(this);
 
         String first_Name = firstName.getText().toString().trim();
         String last_Name = lastName.getText().toString().trim();
@@ -120,6 +121,12 @@ public class SignUp extends AppCompatActivity {
         // Check if the email is valid
         if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email_s).matches()) {
             Toast.makeText(this, "Enter a valid email address", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        // Check if the email already exists
+        if (dbHelper.checkEmailExistence(email_s)) {
+            // Email already exists, show an error message or handle accordingly
+            Toast.makeText(this, "Email already exists. Please use a different email.", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -153,7 +160,7 @@ public class SignUp extends AppCompatActivity {
 
         User newUser = new User(first_Name, last_Name, email_s, gender, password_s, country, city, phoneNumber);
 
-        long result = addUser(newUser);
+        long result = dbHelper.addUser(newUser);
 
         if (result != -1) {
             Toast.makeText(this, "Signup successful!", Toast.LENGTH_SHORT).show();
@@ -167,11 +174,6 @@ public class SignUp extends AppCompatActivity {
         }
     }
 
-    private long addUser(User user) {
-        DataBaseHelper dbHelper = new DataBaseHelper(this,"Database_H&H",null,1);
-        long result = dbHelper.addUser(user);
-        return result;
-    }
 
     private void populateCitySpinner(String selectedCountry) {
         Spinner citySpinner = findViewById(R.id.citySpinner);

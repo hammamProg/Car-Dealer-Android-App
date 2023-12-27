@@ -14,7 +14,7 @@ public class User {
 
     // Constructor
     public User(String email, String firstName, String lastName, String gender, String password,
-                String country, String city, String phoneNumber,int isLoggedIn) {
+                String country, String city, String phoneNumber) {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;

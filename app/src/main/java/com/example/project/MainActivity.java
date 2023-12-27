@@ -11,6 +11,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.project.API.ConnectionAsyncTask;
+import com.example.project.Database.DataBaseHelper;
 import com.example.project.Objects.Car;
 import com.example.project.Screens.Auth.Login;
 
@@ -24,6 +25,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        DataBaseHelper dbHelper = new DataBaseHelper(this);
+
         setProgress(false);
         button = (Button) findViewById(R.id.connectButton);
         button.setOnClickListener(new View.OnClickListener() {
@@ -33,6 +37,8 @@ public class MainActivity extends AppCompatActivity {
                 connectionAsyncTask.execute("https://658582eb022766bcb8c8c86e.mockapi.io/api/mock/rest-apis/encs5150/car-types");
                 // TODO > if    connection success trans.to. Login
                 //      > else  stay in the same page
+
+
 
                 Intent intent = new Intent(MainActivity.this, Login.class);
                 startActivity(intent);
