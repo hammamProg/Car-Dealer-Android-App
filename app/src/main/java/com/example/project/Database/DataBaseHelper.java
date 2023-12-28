@@ -165,8 +165,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                         // User is already logged in
                         Log.d("db", "User is already logged in");
 
-                        // Return false to indicate that the user is already logged in
-                        return false;
+                        // Return true to indicate that the user is already logged in
+                        return true;
                     }
                 } else {
                     // Handle the case where the column index is not found
