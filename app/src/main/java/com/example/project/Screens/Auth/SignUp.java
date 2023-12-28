@@ -158,7 +158,16 @@ public class SignUp extends AppCompatActivity {
         String phone_start = phoneNumberTextView.getText().toString();
         phoneNumber = phone_start.concat(phoneNumber);
 
-        User newUser = new User(first_Name, last_Name, email_s, gender, password_s, country, city, phoneNumber);
+        User newUser = new User(
+                email_s,
+                first_Name,
+                last_Name,
+                gender,
+                password_s,
+                country,
+                city,
+                phoneNumber
+        );
 
         long result = dbHelper.addUser(newUser);
 
