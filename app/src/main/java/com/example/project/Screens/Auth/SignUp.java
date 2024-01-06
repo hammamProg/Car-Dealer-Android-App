@@ -2,7 +2,6 @@ package com.example.project.Screens.Auth;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -18,7 +17,7 @@ import android.widget.Toast;
 import com.example.project.Database.DataBaseHelper;
 import com.example.project.Objects.User;
 import com.example.project.R;
-import com.example.project.Screens.home_screen;
+import com.example.project.Home;
 
 public class SignUp extends AppCompatActivity {
     private EditText email,firstName,lastName,password,confirmPassword,phone;
@@ -174,7 +173,7 @@ public class SignUp extends AppCompatActivity {
         if (result != -1) {
             Toast.makeText(this, "Signup successful!", Toast.LENGTH_SHORT).show();
             // You may navigate to the next screen or perform other actions
-            Intent intent = new Intent(SignUp.this, home_screen.class);
+            Intent intent = new Intent(SignUp.this, Home.class);
             startActivity(intent);
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 

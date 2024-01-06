@@ -2,11 +2,12 @@ package com.example.project.Screens.Auth;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
-import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.util.Log;
@@ -20,7 +21,8 @@ import android.widget.Toast;
 import com.example.project.Database.DataBaseHelper;
 import com.example.project.Objects.User;
 import com.example.project.R;
-import com.example.project.Screens.home_screen;
+import com.example.project.Home;
+import com.example.project.ui.Car_Menu;
 
 import java.util.List;
 
@@ -62,13 +64,18 @@ public class Login extends AppCompatActivity {
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Login();
+                Login(checkBoxRememberMe.isChecked());
             }
         });
+
+        loadCredentialsFromSharedPreferences();
     }
 
-    public void Login(){
+    @SuppressLint("NotConstructor")
+    public void Login(boolean checked){
         DataBaseHelper dbHelper = new DataBaseHelper(this);
+
+        // For Testing issues
         List<User> allUsers = dbHelper.getAllUsers();
         for (User user : allUsers) {
             Log.d("User Info", "Email: " + user.getEmail() + ", Password: "+ user.getPassword() +
@@ -100,7 +107,12 @@ public class Login extends AppCompatActivity {
         if (result){
             // Logged in success
             Toast.makeText(this, "Logged In Successfully", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(Login.this, home_screen.class);
+
+            // check if checked > then save the data of the user in shared preferences
+            saveCredentialsToSharedPreferences(email_s, password_s, checked);
+
+
+            Intent intent = new Intent(Login.this, Car_Menu.class);
             startActivity(intent);
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 
@@ -108,6 +120,29 @@ public class Login extends AppCompatActivity {
             // Logged in failed
             Toast.makeText(this, "Logged In Failed!! check your data", Toast.LENGTH_SHORT).show();
             return;
+        }
+    }
+
+    private void saveCredentialsToSharedPreferences(String email, String password, boolean rememberMe) {
+        SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("email", email);
+        editor.putString("password", password);
+        editor.putBoolean("rememberMe", rememberMe);
+        editor.apply();
+    }
+
+    private void loadCredentialsFromSharedPreferences() {
+        SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        boolean rememberMe = preferences.getBoolean("rememberMe", false);
+
+        if (rememberMe) {
+            String userEmail = preferences.getString("email", "");
+            String storedPassword = preferences.getString("password", "");
+
+            // Fill in the email and password fields in the login screen
+            email.setText(userEmail);
+            password.setText(storedPassword);
         }
     }
 

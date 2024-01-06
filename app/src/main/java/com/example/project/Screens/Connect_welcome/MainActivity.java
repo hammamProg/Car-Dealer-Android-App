@@ -1,4 +1,4 @@
-package com.example.project;
+package com.example.project.Screens.Connect_welcome;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.example.project.API.ConnectionAsyncTask;
 import com.example.project.Database.DataBaseHelper;
 import com.example.project.Objects.Car;
+import com.example.project.R;
 import com.example.project.Screens.Auth.Login;
 
 import java.util.List;
@@ -20,13 +21,13 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     Button button;
     LinearLayout linearLayout;
-
+    DataBaseHelper dbHelper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        DataBaseHelper dbHelper = new DataBaseHelper(this);
+        dbHelper = new DataBaseHelper(this);
 
         setProgress(false);
         button = (Button) findViewById(R.id.connectButton);
@@ -34,7 +35,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 ConnectionAsyncTask connectionAsyncTask = new ConnectionAsyncTask(MainActivity.this);
-                connectionAsyncTask.execute("https://658582eb022766bcb8c8c86e.mockapi.io/api/mock/rest-apis/encs5150/car-types");
+//                connectionAsyncTask.execute("https://658582eb022766bcb8c8c86e.mockapi.io/api/mock/rest-apis/encs5150/car-types");
+                connectionAsyncTask.execute("https://6598e4f4a20d3dc41cef093f.mockapi.io/cars");
+
                 // TODO > if    connection success trans.to. Login
                 //      > else  stay in the same page
 
@@ -51,13 +54,22 @@ public class MainActivity extends AppCompatActivity {
         button.setText(text);
     }
 
-    public void fillStudents(List<Car> cars) {
-        LinearLayout linearLayout = (LinearLayout)findViewById(R.id.testData);
-        linearLayout.removeAllViews();
+    public void fillCars(List<Car> cars) {
+        // Fill all cars into database
+
+//        LinearLayout linearLayout = (LinearLayout)findViewById(R.id.testData);
+//        linearLayout.removeAllViews();
+
         for (int i = 0; i < cars.size(); i++) {
-            TextView textView = new TextView(this);
-            textView.setText(cars.get(i).toString());
-            linearLayout.addView(textView);
+            if (dbHelper.checkCarExistence(cars.get(i).getId())){
+                break;
+            }
+
+            dbHelper.addCar(cars.get(i));
+
+//            TextView textView = new TextView(this);
+//            textView.setText(cars.get(i).toString());
+//            linearLayout.addView(textView);
         }
     }
     public void setProgress(boolean progress) {

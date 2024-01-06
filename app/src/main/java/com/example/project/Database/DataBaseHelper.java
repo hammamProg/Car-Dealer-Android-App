@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
+import com.example.project.Objects.Car;
 import com.example.project.Objects.User;
 
 import java.nio.charset.StandardCharsets;
@@ -37,6 +38,30 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_PHONE_NUMBER = "phone_number";
     private static final String COLUMN_IS_LOGGED_IN = "is_logged_in";
 
+    // Table name and column names for car information
+    private static final String TABLE_CARS = "cars";
+    private static final String COLUMN_CAR_ID = "id";
+    private static final String COLUMN_BRAND = "brand";
+    private static final String COLUMN_MODEL = "model";
+    private static final String COLUMN_CAR_TYPE = "type";
+    private static final String COLUMN_YEAR = "year";
+    private static final String COLUMN_COLOR = "color";
+    private static final String COLUMN_CAR_PRICE = "price";
+    private static final String COLUMN_IMAGE = "image";
+
+    // SQL query to create the cars table
+    private static final String CREATE_TABLE_CARS =
+            "CREATE TABLE " + TABLE_CARS + "(" +
+                    COLUMN_CAR_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    COLUMN_BRAND + " TEXT," +
+                    COLUMN_MODEL + " TEXT," +
+                    COLUMN_CAR_TYPE + " TEXT," +
+                    COLUMN_YEAR + " TEXT," +
+                    COLUMN_COLOR + " TEXT," +
+                    COLUMN_CAR_PRICE + " REAL," +
+                    COLUMN_IMAGE + " TEXT" +
+                    ")";
+
     // SQL query to create the users table
     private static final String CREATE_TABLE_USERS =
             "CREATE TABLE " + TABLE_USERS + "(" +
@@ -53,6 +78,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
 
 
+
     public DataBaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         this.context = context;
@@ -64,6 +90,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_TABLE_USERS);
+        db.execSQL(CREATE_TABLE_CARS);
         Toast.makeText(context, "DataBase Initialized Success!", Toast.LENGTH_SHORT).show();
     }
 
@@ -74,6 +101,83 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS);
         onCreate(db);
     }
+
+
+//    ================================  Car Methods  ================================
+    // Method to add a new car to the database
+    public long addCar(Car car) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(COLUMN_BRAND, car.getBrand());
+        values.put(COLUMN_MODEL, car.getModel());
+        values.put(COLUMN_CAR_TYPE, car.getType());
+        values.put(COLUMN_YEAR, car.getYear());
+        values.put(COLUMN_COLOR, car.getColor());
+        values.put(COLUMN_CAR_PRICE, car.getPrice());
+        values.put(COLUMN_IMAGE, car.getImage());
+
+        long result = db.insert(TABLE_CARS, null, values);
+        db.close();
+        return result;
+    }
+
+    // Method to get all cars from the database
+    public List<Car> getAllCars() {
+        List<Car> carList = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        String[] columns = {COLUMN_CAR_ID, COLUMN_BRAND, COLUMN_MODEL, COLUMN_CAR_TYPE, COLUMN_YEAR, COLUMN_COLOR, COLUMN_CAR_PRICE, COLUMN_IMAGE};
+
+        try (Cursor cursor = db.query(TABLE_CARS, columns, null, null, null, null, null)) {
+            int carIdIndex = cursor.getColumnIndex(COLUMN_CAR_ID);
+            int brandIndex = cursor.getColumnIndex(COLUMN_BRAND);
+            int modelIndex = cursor.getColumnIndex(COLUMN_MODEL);
+            int typeIndex = cursor.getColumnIndex(COLUMN_CAR_TYPE);
+            int yearIndex = cursor.getColumnIndex(COLUMN_YEAR);
+            int colorIndex = cursor.getColumnIndex(COLUMN_COLOR);
+            int priceIndex = cursor.getColumnIndex(COLUMN_CAR_PRICE);
+            int imageIndex = cursor.getColumnIndex(COLUMN_IMAGE);
+
+            while (cursor.moveToNext()) {
+                int carId = cursor.getInt(carIdIndex);
+                String brand = cursor.getString(brandIndex);
+                String model = cursor.getString(modelIndex);
+                String type = cursor.getString(typeIndex);
+                String year = cursor.getString(yearIndex);
+                String color = cursor.getString(colorIndex);
+                double price = cursor.getDouble(priceIndex);
+                String image = cursor.getString(imageIndex);
+
+                Car car = new Car(carId, brand, model, type, year, color, price, image);
+                carList.add(car);
+            }
+        } catch (Exception e) {
+            Log.e("Database Error", "Error fetching all cars", e);
+        } finally {
+            db.close();
+        }
+
+        return carList;
+    }
+    // Method to check if a car with the given ID exists in the database
+    public boolean checkCarExistence(int carId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String[] columns = {COLUMN_CAR_ID};
+        String selection = COLUMN_CAR_ID + " = ?";
+        String[] selectionArgs = {String.valueOf(carId)};
+
+        Cursor cursor = db.query(TABLE_CARS, columns, selection, selectionArgs, null, null, null);
+
+        int count = cursor.getCount();
+
+        cursor.close();
+        db.close();
+
+        // If count is greater than 0, the car with the given ID exists
+        return count > 0;
+    }
+
+//    ================================================================
 
     public static String hashPassword(String password) {
         try {

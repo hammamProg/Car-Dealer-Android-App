@@ -3,7 +3,7 @@ import android.app.Activity;
 import android.os.AsyncTask;
 
 import com.example.project.Objects.Car;
-import com.example.project.MainActivity;
+import com.example.project.Screens.Connect_welcome.MainActivity;
 
 import java.util.List;
 public class ConnectionAsyncTask extends AsyncTask<String, String,String> {
@@ -29,7 +29,7 @@ public class ConnectionAsyncTask extends AsyncTask<String, String,String> {
         super.onPostExecute(s);
         ((MainActivity) activity).setProgress(false);
         ((MainActivity) activity).setButtonText("connected");
-        List<Car> students = CarJsonParser.getObjectFromJson(s);
-        ((MainActivity) activity).fillStudents(students);
+        List<Car> cars = CarJsonParser.getObjectFromJson(s);
+        ((MainActivity) activity).fillCars(cars);
     }
 }

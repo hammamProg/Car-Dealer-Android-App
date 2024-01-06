@@ -23,8 +23,23 @@ public class CarJsonParser {
                 jsonObject = (JSONObject) jsonArray.get(i);
 
                 Car car = new Car();
+
+                // Doctor Rest API
+//                car.setId(jsonObject.getInt("id"));
+//                car.setType(jsonObject.getString("type"));
+//                car.setImage_path("drawable/project_logo.png");
+
+
+                // Mine API
                 car.setId(jsonObject.getInt("id"));
-                car.setType(jsonObject.getString("type"));
+                car.setBrand(jsonObject.getString("Brand"));
+                car.setModel(jsonObject.getString("Model"));
+                car.setType(jsonObject.getString("Type"));
+                car.setYear(jsonObject.getString("Year"));
+                car.setColor(jsonObject.getString("Color"));
+                car.setPrice(jsonObject.getDouble("Price"));
+                car.setImage(jsonObject.getString("Image"));
+
 
                 cars.add(car);
             }
