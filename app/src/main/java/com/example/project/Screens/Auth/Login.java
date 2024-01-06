@@ -3,6 +3,7 @@ package com.example.project.Screens.Auth;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -21,15 +22,15 @@ import android.widget.Toast;
 import com.example.project.Database.DataBaseHelper;
 import com.example.project.Objects.User;
 import com.example.project.R;
-import com.example.project.Home;
-import com.example.project.ui.Car_Menu;
+import com.example.project.navDrawer;
 
 import java.util.List;
+import com.google.gson.Gson;
 
 public class Login extends AppCompatActivity {
     private EditText email, password;
     private CheckBox checkBoxRememberMe;
-    private Button buttonLogin, buttonSignUp;
+    private Button buttonLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,25 +68,11 @@ public class Login extends AppCompatActivity {
                 Login(checkBoxRememberMe.isChecked());
             }
         });
-
-        loadCredentialsFromSharedPreferences();
     }
 
     @SuppressLint("NotConstructor")
     public void Login(boolean checked){
         DataBaseHelper dbHelper = new DataBaseHelper(this);
-
-        // For Testing issues
-        List<User> allUsers = dbHelper.getAllUsers();
-        for (User user : allUsers) {
-            Log.d("User Info", "Email: " + user.getEmail() + ", Password: "+ user.getPassword() +
-                    ", First Name: " + user.getFirstName() +
-                    ", Last Name: " + user.getLastName() +
-                    ", Gender: " + user.getGender() +
-                    ", Country: " + user.getCountry() +
-                    ", City: " + user.getCity() +
-                    ", Phone Number: " + user.getPhoneNumber());
-        }
 
         String email_s = email.getText().toString().trim();
         String password_s = password.getText().toString();
@@ -108,11 +95,12 @@ public class Login extends AppCompatActivity {
             // Logged in success
             Toast.makeText(this, "Logged In Successfully", Toast.LENGTH_SHORT).show();
 
-            // check if checked > then save the data of the user in shared preferences
-            saveCredentialsToSharedPreferences(email_s, password_s, checked);
+
+            // -> get user data as User object
+            saveUserToSharedPreferences(email_s,checked);
 
 
-            Intent intent = new Intent(Login.this, Car_Menu.class);
+            Intent intent = new Intent(Login.this, navDrawer.class);
             startActivity(intent);
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 
@@ -123,27 +111,47 @@ public class Login extends AppCompatActivity {
         }
     }
 
-    private void saveCredentialsToSharedPreferences(String email, String password, boolean rememberMe) {
+    private void saveUserToSharedPreferences(String email, boolean rememberMe) {
+        if (!rememberMe) {
+            return; // Don't save anything if rememberMe is false
+        }
+        DataBaseHelper dbHelper = new DataBaseHelper(this);
+        User user = dbHelper.getUserByEmail(email);
+
         SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putString("email", email);
-        editor.putString("password", password);
+
+        // Convert User object to JSON string
+        String userJson = new Gson().toJson(user);
+
+        editor.putString("userJson", userJson);
         editor.putBoolean("rememberMe", rememberMe);
         editor.apply();
     }
 
-    private void loadCredentialsFromSharedPreferences() {
-        SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-        boolean rememberMe = preferences.getBoolean("rememberMe", false);
+    public static User getUserFromSharedPreferences(Context context) {
+        SharedPreferences preferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
 
-        if (rememberMe) {
-            String userEmail = preferences.getString("email", "");
-            String storedPassword = preferences.getString("password", "");
+        // Retrieve JSON string from SharedPreferences
+        String userJson = preferences.getString("userJson", null);
 
-            // Fill in the email and password fields in the login screen
-            email.setText(userEmail);
-            password.setText(storedPassword);
+        // Convert JSON string back to User object
+        if (userJson != null) {
+            return new Gson().fromJson(userJson, User.class);
+        } else {
+            return null;
         }
+    }
+
+    public static void removeSharedPreferences(Context context) {
+        SharedPreferences preferences = context.getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+
+        // Clear all data in the SharedPreferences
+        editor.clear();
+
+        // Apply the changes
+        editor.apply();
     }
 
 }

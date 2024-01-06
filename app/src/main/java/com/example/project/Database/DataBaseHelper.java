@@ -198,6 +198,66 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     //    ================================  Favorite Methods  ===========================================
 
 
+    // Method to add a new favorite car record
+    public long addFavoriteCar(String userEmail, int carId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(COLUMN_USER_EMAIL, userEmail);
+        values.put(COLUMN_CAR_ID_FK, carId);
+
+        long result = db.insert(TABLE_FAVORITE_CARS, null, values);
+        db.close();
+        return result;
+    }
+
+    // Method to delete a favorite car by car ID and user email
+    public int deleteFavoriteCar(String userEmail, int carId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String whereClause = COLUMN_USER_EMAIL + " = ? AND " + COLUMN_CAR_ID_FK + " = ?";
+        String[] whereArgs = {userEmail, String.valueOf(carId)};
+
+        int result = db.delete(TABLE_FAVORITE_CARS, whereClause, whereArgs);
+        db.close();
+        return result;
+    }
+
+    // Method to get all favorite cars as List<Car> for a specific user email
+    public List<Car> getFavoriteCars(String userEmail) {
+        List<Car> favoriteCars = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String query = "SELECT " + TABLE_CARS + ".* FROM " + TABLE_CARS +
+                " INNER JOIN " + TABLE_FAVORITE_CARS +
+                " ON " + TABLE_CARS + "." + COLUMN_CAR_ID + " = " + TABLE_FAVORITE_CARS + "." + COLUMN_CAR_ID_FK +
+                " WHERE " + TABLE_FAVORITE_CARS + "." + COLUMN_USER_EMAIL + " = ?";
+
+        String[] selectionArgs = {userEmail};
+
+        try (Cursor cursor = db.rawQuery(query, selectionArgs)) {
+            while (cursor.moveToNext()) {
+                @SuppressLint("Range") int carId = cursor.getInt(cursor.getColumnIndex(COLUMN_CAR_ID));
+                @SuppressLint("Range") String brand = cursor.getString(cursor.getColumnIndex(COLUMN_BRAND));
+                @SuppressLint("Range") String model = cursor.getString(cursor.getColumnIndex(COLUMN_MODEL));
+                @SuppressLint("Range") String type = cursor.getString(cursor.getColumnIndex(COLUMN_CAR_TYPE));
+                @SuppressLint("Range") String year = cursor.getString(cursor.getColumnIndex(COLUMN_YEAR));
+                @SuppressLint("Range") String color = cursor.getString(cursor.getColumnIndex(COLUMN_COLOR));
+                @SuppressLint("Range") double price = cursor.getDouble(cursor.getColumnIndex(COLUMN_CAR_PRICE));
+                @SuppressLint("Range") String image = cursor.getString(cursor.getColumnIndex(COLUMN_IMAGE));
+
+                Car car = new Car(carId, brand, model, type, year, color, price, image);
+                favoriteCars.add(car);
+            }
+        } catch (Exception e) {
+            Log.e("Database Error", "Error fetching favorite cars", e);
+        } finally {
+            db.close();
+        }
+
+        return favoriteCars;
+    }
+
+
     public static String hashPassword(String password) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
@@ -369,6 +429,42 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         return userList;
     }
+
+    // Method to get a user by email
+    public User getUserByEmail(String email) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String[] columns = {COLUMN_EMAIL, COLUMN_PASSWORD, COLUMN_FIRST_NAME, COLUMN_LAST_NAME, COLUMN_GENDER,
+                COLUMN_COUNTRY, COLUMN_CITY, COLUMN_PHONE_NUMBER};
+
+        String selection = COLUMN_EMAIL + " = ?";
+        String[] selectionArgs = {email};
+
+        try (Cursor cursor = db.query(TABLE_USERS, columns, selection, selectionArgs, null, null, null)) {
+            if (cursor.moveToFirst()) {
+                @SuppressLint("Range") String retrievedEmail = cursor.getString(cursor.getColumnIndex(COLUMN_EMAIL));
+                @SuppressLint("Range") String retrievedPassword = cursor.getString(cursor.getColumnIndex(COLUMN_PASSWORD));
+                @SuppressLint("Range") String firstName = cursor.getString(cursor.getColumnIndex(COLUMN_FIRST_NAME));
+                @SuppressLint("Range") String lastName = cursor.getString(cursor.getColumnIndex(COLUMN_LAST_NAME));
+                @SuppressLint("Range") String gender = cursor.getString(cursor.getColumnIndex(COLUMN_GENDER));
+                @SuppressLint("Range") String country = cursor.getString(cursor.getColumnIndex(COLUMN_COUNTRY));
+                @SuppressLint("Range") String city = cursor.getString(cursor.getColumnIndex(COLUMN_CITY));
+                @SuppressLint("Range") String phoneNumber = cursor.getString(cursor.getColumnIndex(COLUMN_PHONE_NUMBER));
+
+                // TODO: Retrieve favorite cars for the user
+                // List<Car> favoriteCars = getFavoriteCars(retrievedEmail);
+
+                return new User(retrievedEmail, firstName, lastName, gender, retrievedPassword, country, city, phoneNumber);
+            } else {
+                return null; // User not found
+            }
+        } catch (Exception e) {
+            Log.e("Database Error", "Error fetching user by email", e);
+            return null;
+        } finally {
+            db.close();
+        }
+    }
+
 
 
 }

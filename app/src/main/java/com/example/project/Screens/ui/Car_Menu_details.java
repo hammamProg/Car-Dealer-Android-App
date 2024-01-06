@@ -1,4 +1,4 @@
-package com.example.project.ui;
+package com.example.project.Screens.ui;
 
 import android.os.Bundle;
 
@@ -30,7 +30,7 @@ public class Car_Menu_details extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_car__menu_details, container, false);
+        View view = inflater.inflate(R.layout.fragment_car_menu_details, container, false);
 
         carNameTextView = view.findViewById(R.id.view_Name);
         carTypeTextView = view.findViewById(R.id.view_Type);

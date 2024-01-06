@@ -55,6 +55,7 @@
     <string name="profile">Profile</string>
     <string name="calll_us_or_find_us">Call Us or Find Us</string>
     <string name="logout">Logout</string>
+    <string name="title_activity_nav_drawer">navDrawer</string>
 
 
 </resources>

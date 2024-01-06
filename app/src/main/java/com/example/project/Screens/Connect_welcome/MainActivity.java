@@ -11,16 +11,15 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.example.project.API.ConnectionAsyncTask;
 import com.example.project.Database.DataBaseHelper;
 import com.example.project.Objects.Car;
+import com.example.project.Objects.User;
 import com.example.project.R;
 import com.example.project.Screens.Auth.Login;
-import com.example.project.ui.CarUtility;
+import com.example.project.navDrawer;
 
 import java.util.List;
 
@@ -83,6 +82,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        User user = Login.getUserFromSharedPreferences(this);
+        if (user != null){
+            // there's user in sharedPreference
+            Intent intent = new Intent(MainActivity.this, navDrawer.class);
+            startActivity(intent);
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+        }else{
+            // there's no user ( Don't do anything )
+
+
+        }
     }
     public void setButtonText(String text) {
         button.setText(text);
@@ -91,19 +101,11 @@ public class MainActivity extends AppCompatActivity {
     public void fillCars(List<Car> cars) {
         // Fill all cars into database
 
-//        LinearLayout linearLayout = (LinearLayout)findViewById(R.id.testData);
-//        linearLayout.removeAllViews();
-
         for (int i = 0; i < cars.size(); i++) {
             if (dbHelper.checkCarExistence(cars.get(i).getId())){
                 break;
             }
-
             dbHelper.addCar(cars.get(i));
-
-//            TextView textView = new TextView(this);
-//            textView.setText(cars.get(i).toString());
-//            linearLayout.addView(textView);
         }
     }
     public void setProgress(boolean progress) {

@@ -1,4 +1,4 @@
-package com.example.project.ui;
+package com.example.project.Screens.ui;
 
 import android.content.Context;
 import android.os.Bundle;
