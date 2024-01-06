@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -22,10 +23,10 @@ import java.util.List;
 
 public class DataBaseHelper extends SQLiteOpenHelper {
     private Context context;
-    // Database name and version
+    // $ Database name and version
     private static final String DATABASE_NAME = "Database_H&H";
     private static final int DATABASE_VERSION = 1;
-
+    // ========================================================
     // Table name and column names for user information
     private static final String TABLE_USERS = "users";
     private static final String COLUMN_EMAIL = "email";
@@ -38,6 +39,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_PHONE_NUMBER = "phone_number";
     private static final String COLUMN_IS_LOGGED_IN = "is_logged_in";
 
+
     // Table name and column names for car information
     private static final String TABLE_CARS = "cars";
     private static final String COLUMN_CAR_ID = "id";
@@ -48,6 +50,11 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_COLOR = "color";
     private static final String COLUMN_CAR_PRICE = "price";
     private static final String COLUMN_IMAGE = "image";
+
+    private static final String TABLE_FAVORITE_CARS = "favorite_cars";
+    private static final String COLUMN_FAVORITE_ID = "favorite_id";
+    private static final String COLUMN_USER_EMAIL = "user_email";  // Foreign key referencing users.email
+    private static final String COLUMN_CAR_ID_FK = "car_id";       // Foreign key referencing cars.id
 
     // SQL query to create the cars table
     private static final String CREATE_TABLE_CARS =
@@ -73,10 +80,18 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                     COLUMN_COUNTRY + " TEXT," +
                     COLUMN_CITY + " TEXT," +
                     COLUMN_PHONE_NUMBER + " TEXT," +
-                    COLUMN_IS_LOGGED_IN + " INTEGER DEFAULT 0" +  // 0 for false, 1 for true
+                    COLUMN_IS_LOGGED_IN + " INTEGER DEFAULT 0" +
                     ")";
 
-
+    // SQL query to create the favorite_cars table
+    private static final String CREATE_TABLE_FAVORITE_CARS =
+            "CREATE TABLE " + TABLE_FAVORITE_CARS + "(" +
+                    COLUMN_FAVORITE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    COLUMN_USER_EMAIL + " TEXT," +
+                    COLUMN_CAR_ID_FK + " INTEGER," +
+                    "FOREIGN KEY(" + COLUMN_USER_EMAIL + ") REFERENCES " + TABLE_USERS + "(" + COLUMN_EMAIL + ")," +
+                    "FOREIGN KEY(" + COLUMN_CAR_ID_FK + ") REFERENCES " + TABLE_CARS + "(" + COLUMN_CAR_ID + ")" +
+                    ")";
 
 
     public DataBaseHelper(Context context) {
@@ -85,12 +100,12 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
 
 
-
     // Called when the database is created for the first time
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_TABLE_USERS);
         db.execSQL(CREATE_TABLE_CARS);
+        db.execSQL(CREATE_TABLE_FAVORITE_CARS);
         Toast.makeText(context, "DataBase Initialized Success!", Toast.LENGTH_SHORT).show();
     }
 
@@ -103,7 +118,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
 
 
-//    ================================  Car Methods  ================================
+    //    ================================  Car Methods  ===========================================
+
+
     // Method to add a new car to the database
     public long addCar(Car car) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -159,6 +176,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         return carList;
     }
+
     // Method to check if a car with the given ID exists in the database
     public boolean checkCarExistence(int carId) {
         SQLiteDatabase db = this.getReadableDatabase();
@@ -177,7 +195,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return count > 0;
     }
 
-//    ================================================================
+    //    ================================  Favorite Methods  ===========================================
+
 
     public static String hashPassword(String password) {
         try {
@@ -201,6 +220,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             return null;
         }
     }
+
     public boolean checkEmailExistence(String email) {
         SQLiteDatabase db = this.getReadableDatabase();
         String[] columns = {COLUMN_EMAIL};
@@ -312,7 +332,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public List<User> getAllUsers() {
         List<User> userList = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        String[] columns = {COLUMN_EMAIL,COLUMN_PASSWORD, COLUMN_FIRST_NAME, COLUMN_LAST_NAME, COLUMN_GENDER,
+        String[] columns = {COLUMN_EMAIL, COLUMN_PASSWORD, COLUMN_FIRST_NAME, COLUMN_LAST_NAME, COLUMN_GENDER,
                 COLUMN_COUNTRY, COLUMN_CITY, COLUMN_PHONE_NUMBER};
 
         try (Cursor cursor = db.query(TABLE_USERS, columns, null, null, null, null, null)) {
@@ -335,6 +355,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 String city = cursor.getString(cityIndex);
                 String phoneNumber = cursor.getString(phoneNumberIndex);
 
+//                TODO
+//                List<Car> favoriteCars = null;
+
                 User user = new User(email, firstName, lastName, gender, password, country, city, phoneNumber);
                 userList.add(user);
             }
@@ -346,8 +369,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         return userList;
     }
-
-
 
 
 }

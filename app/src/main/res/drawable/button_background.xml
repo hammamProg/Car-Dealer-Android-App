@@ -4,5 +4,5 @@
     <solid android:color="#3498db" /> <!-- Change this color to your desired background color -->
     <stroke
         android:width="2dp"
-        android:color="#2980b9" /> <!-- Change this color to your desired border color -->
+        android:color="@color/colorSecondary" /> <!-- Change this color to your desired border color -->
 </shape>

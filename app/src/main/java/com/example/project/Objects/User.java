@@ -1,5 +1,7 @@
 package com.example.project.Objects;
 
+import java.util.List;
+
 public class User {
     private int isLoggedIn;
     private String email;
@@ -10,7 +12,7 @@ public class User {
     private String country;
     private String city;
     private String phoneNumber;
-
+    private List<Car> favoriteCars;  // New field to represent favorite cars
 
     // Constructor
     public User(String email, String firstName, String lastName, String gender, String password,
@@ -24,6 +26,7 @@ public class User {
         this.city = city;
         this.phoneNumber = phoneNumber;
         this.isLoggedIn = isLoggedIn;
+//        this.favoriteCars = favoriteCars;
     }
 
     public String getEmail() {
@@ -88,5 +91,13 @@ public class User {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public List<Car> getFavoriteCars() {
+        return favoriteCars;
+    }
+
+    public void setFavoriteCars(List<Car> favoriteCars) {
+        this.favoriteCars = favoriteCars;
     }
 }

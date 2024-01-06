@@ -2,8 +2,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorMain"
+    android:background="@color/colorAccent"
     android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center">
 
     <ImageView
         android:id="@+id/logoImageView"
@@ -15,7 +21,7 @@
 
     <EditText
         android:id="@+id/firstNameEditText"
-        android:layout_width="match_parent"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:hint="First Name"
         android:inputType="text"
@@ -24,7 +30,7 @@
 
     <EditText
         android:id="@+id/lastNameEditText"
-        android:layout_width="match_parent"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:hint="Last Name"
         android:inputType="text"
@@ -33,7 +39,7 @@
 
     <EditText
         android:id="@+id/emailEditText"
-        android:layout_width="match_parent"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:hint="Email"
         android:inputType="textEmailAddress"
@@ -42,14 +48,14 @@
 
     <Spinner
         android:id="@+id/genderSpinner"
-        android:layout_width="match_parent"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_below="@id/emailEditText"
         android:layout_marginTop="8dp"/>
 
     <EditText
         android:id="@+id/passwordSignUpEditText"
-        android:layout_width="match_parent"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:hint="Password"
         android:inputType="textPassword"
@@ -58,7 +64,7 @@
 
     <EditText
         android:id="@+id/confirmPasswordEditText"
-        android:layout_width="match_parent"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:hint="Confirm Password"
         android:inputType="textPassword"
@@ -67,21 +73,21 @@
 
     <Spinner
         android:id="@+id/countrySpinner"
-        android:layout_width="match_parent"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_below="@id/confirmPasswordEditText"
         android:layout_marginTop="8dp"/>
 
     <Spinner
         android:id="@+id/citySpinner"
-        android:layout_width="match_parent"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_below="@id/countrySpinner"
         android:layout_marginTop="8dp"/>
 
     <LinearLayout
         android:id="@+id/phoneNumber"
-        android:layout_width="match_parent"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_below="@id/citySpinner"
         android:orientation="horizontal">
@@ -103,12 +109,14 @@
     </LinearLayout>
 
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/signupButton"
-        android:layout_width="match_parent"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:text="Sign Up"
         android:layout_below="@id/phoneNumber"
+        android:background="@drawable/button_background"
         android:layout_marginTop="16dp"/>
 
+    </LinearLayout>
 </RelativeLayout>

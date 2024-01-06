@@ -4,9 +4,9 @@
     <color name="white">#FFFFFFFF</color>
 
 <!--    <color name="colorMain">#092635</color>-->
-    <color name="colorMain">#ffffff</color>
-    <color name="colorAccent">#0A3D0F</color>
-    <color name="colorSecondary">#F4FBF8</color>
+    <color name="colorMain">#5e69ee</color>
+    <color name="colorSecondary">#39AFEA</color>
+    <color name="colorAccent">#F4F4FB</color>
 
     <color name="navigation_bar_item_BG_color">#1B4242</color>
     <color name="navigation_bar_item_text_color">#fff</color>

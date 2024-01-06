@@ -41,13 +41,13 @@ public class Car_Menu_details extends Fragment {
 
         Car car = (Car) getArguments().getSerializable("carObject");
 
-        carNameTextView.setText(car.getBrand());
-        carTypeTextView.setText(car.getType());
-        carModelTextView.setText(car.getModel());
-        carYearTextView.setText(car.getYear());
+        carNameTextView.setText("Brand: "+car.getBrand());
+        carTypeTextView.setText("Type: "+car.getType());
+        carModelTextView.setText("Model: "+car.getModel());
+        carYearTextView.setText("Year: "+car.getYear());
 
         String price_str =Integer.toString((int) car.getPrice());
-        carPriceTextView.setText(price_str+" $");
+        carPriceTextView.setText("Price: "+price_str+" $");
         Picasso.get().load(car.getImage()).into(carImageView);
 
         return view;

@@ -2,9 +2,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorMain"
+    android:background="@color/colorAccent"
     android:padding="16dp">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center">
     <ImageView
         android:id="@+id/logoImageView"
         android:layout_width="194dp"
@@ -15,7 +20,7 @@
 
     <EditText
         android:id="@+id/emailEditText"
-        android:layout_width="match_parent"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:hint="Email"
         android:inputType="textEmailAddress"
@@ -24,7 +29,7 @@
 
     <EditText
         android:id="@+id/passwordEditText"
-        android:layout_width="match_parent"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:hint="Password"
         android:inputType="textPassword"
@@ -39,13 +44,14 @@
         android:layout_below="@id/passwordEditText"
         android:layout_marginTop="8dp"/>
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/loginButton"
-        android:layout_width="match_parent"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:text="Login"
         android:layout_below="@id/rememberCheckBox"
-        android:backgroundTint="@color/colorAccent"
+        android:background="@drawable/button_background"
+        android:textColor="@color/white"
         android:layout_marginTop="16dp"/>
 
     <TextView
@@ -56,5 +62,6 @@
         android:layout_below="@id/loginButton"
         android:layout_marginTop="16dp"/>
 
+    </LinearLayout>
 
 </RelativeLayout>

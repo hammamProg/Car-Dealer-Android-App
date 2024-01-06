@@ -35,30 +35,35 @@
                     android:id="@+id/view_Name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textStyle="bold"
                     android:text="brand" />
 
                 <TextView
                     android:id="@+id/view_Type"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textStyle="bold"
                     android:text="type" />
 
                 <TextView
                     android:id="@+id/view_Model"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textStyle="bold"
                     android:text="model" />
 
                 <TextView
                     android:id="@+id/view_Year"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textStyle="bold"
                     android:text="2024" />
 
                 <TextView
                     android:id="@+id/view_Price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textStyle="bold"
                     android:text="4,000,000$" />
             </LinearLayout>
 
