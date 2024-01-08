@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    tools:context=".Screens.ui.Car_Menu_details">
+    tools:context=".Screens.Utilities.Car_Menu_details">
 
 
     <LinearLayout
@@ -85,7 +85,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/button_background"
                 android:padding="12dp"
-                android:src="@drawable/favourite_icon" />
+                android:src="@drawable/unfavorite_icon" />
 
         </LinearLayout>
     </LinearLayout>

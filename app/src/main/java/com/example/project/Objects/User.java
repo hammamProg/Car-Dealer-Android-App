@@ -16,7 +16,7 @@ public class User {
 
     // Constructor
     public User(String email, String firstName, String lastName, String gender, String password,
-                String country, String city, String phoneNumber, boolean rememberMe) {
+                String country, String city, String phoneNumber, boolean rememberMe, List<Car> favoriteCars) {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -26,7 +26,7 @@ public class User {
         this.city = city;
         this.phoneNumber = phoneNumber;
         this.rememberMe = rememberMe;
-//        this.favoriteCars = favoriteCars;
+        this.favoriteCars = favoriteCars;
     }
 
     public String getEmail() {

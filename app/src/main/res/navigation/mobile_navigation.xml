@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/nav_home"
         android:name="com.example.project.ui.home.HomeFragment"
-        android:label="@string/menu_home"
+        android:label="H&amp;H"
         tools:layout="@layout/fragment_home" />
 
     <fragment
@@ -17,6 +17,11 @@
         android:label="Car Menu"
         tools:layout="@layout/fragment_car_menu" />
 
+    <fragment
+        android:id="@+id/nav_your_reservations"
+        android:name="com.example.project.ui.your_reservation.yourReservation_Fragment"
+        android:label="@string/your_reservations"
+        tools:layout="@layout/fragment_your_reservation" />
 
     <fragment
         android:id="@+id/nav_your_favorites"

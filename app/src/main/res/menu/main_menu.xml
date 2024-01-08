@@ -6,8 +6,8 @@ tools:showIn="navigation_view">
 <group android:checkableBehavior="single">
     <item
         android:id="@+id/nav_home"
-        android:icon="@drawable/ic_menu_camera"
-        android:title="@string/menu_home" />
+        android:icon="@drawable/baseline_home_24"
+        android:title="H&amp;H" />
 
     <item
         android:id="@+id/nav_car_menu"

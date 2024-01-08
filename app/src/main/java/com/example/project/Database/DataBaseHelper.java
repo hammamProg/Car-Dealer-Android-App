@@ -13,13 +13,17 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 
 import com.example.project.Objects.Car;
+import com.example.project.Objects.Reservation;
 import com.example.project.Objects.User;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class DataBaseHelper extends SQLiteOpenHelper {
     private Context context;
@@ -56,6 +60,24 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_FAVORITE_ID = "favorite_id";
     private static final String COLUMN_USER_EMAIL = "user_email";  // Foreign key referencing users.email
     private static final String COLUMN_CAR_ID_FK = "car_id";       // Foreign key referencing cars.id
+
+    // Table name and column names for reservation information
+    private static final String TABLE_RESERVATIONS = "reservations";
+    private static final String COLUMN_RESERVATION_ID = "reservation_id";
+    private static final String COLUMN_USER_EMAIL_RESERVATION = "user_email";  // Foreign key referencing users.email
+    private static final String COLUMN_CAR_ID_RESERVATION = "car_id";           // Foreign key referencing cars.id
+    private static final String COLUMN_RESERVATION_DATE = "reservation_date";
+
+    // SQL query to create the reservations table
+    private static final String CREATE_TABLE_RESERVATIONS =
+            "CREATE TABLE " + TABLE_RESERVATIONS + "(" +
+                    COLUMN_RESERVATION_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    COLUMN_USER_EMAIL_RESERVATION + " TEXT," +
+                    COLUMN_CAR_ID_RESERVATION + " INTEGER," +
+                    COLUMN_RESERVATION_DATE + " TEXT," +
+                    "FOREIGN KEY(" + COLUMN_USER_EMAIL_RESERVATION + ") REFERENCES " + TABLE_USERS + "(" + COLUMN_EMAIL + ")," +
+                    "FOREIGN KEY(" + COLUMN_CAR_ID_RESERVATION + ") REFERENCES " + TABLE_CARS + "(" + COLUMN_CAR_ID + ")" +
+                    ")";
 
     // SQL query to create the cars table
     private static final String CREATE_TABLE_CARS =
@@ -107,6 +129,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_USERS);
         db.execSQL(CREATE_TABLE_CARS);
         db.execSQL(CREATE_TABLE_FAVORITE_CARS);
+        db.execSQL(CREATE_TABLE_RESERVATIONS);
         Toast.makeText(context, "DataBase Initialized Success!", Toast.LENGTH_SHORT).show();
     }
 
@@ -177,6 +200,48 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         return carList;
     }
+
+    // Method to get a car by its ID
+    public Car getCarById(int carId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String[] columns = {COLUMN_CAR_ID, COLUMN_BRAND, COLUMN_MODEL, COLUMN_CAR_TYPE, COLUMN_YEAR, COLUMN_COLOR, COLUMN_CAR_PRICE, COLUMN_IMAGE};
+        String selection = COLUMN_CAR_ID + " = ?";
+        String[] selectionArgs = {String.valueOf(carId)};
+
+        Car car = null;
+
+        try (Cursor cursor = db.query(TABLE_CARS, columns, selection, selectionArgs, null, null, null)) {
+            int carIdIndex = cursor.getColumnIndex(COLUMN_CAR_ID);
+            int brandIndex = cursor.getColumnIndex(COLUMN_BRAND);
+            int modelIndex = cursor.getColumnIndex(COLUMN_MODEL);
+            int typeIndex = cursor.getColumnIndex(COLUMN_CAR_TYPE);
+            int yearIndex = cursor.getColumnIndex(COLUMN_YEAR);
+            int colorIndex = cursor.getColumnIndex(COLUMN_COLOR);
+            int priceIndex = cursor.getColumnIndex(COLUMN_CAR_PRICE);
+            int imageIndex = cursor.getColumnIndex(COLUMN_IMAGE);
+
+            if (cursor.moveToFirst()) {
+                // Retrieve car details
+                int retrievedCarId = cursor.getInt(carIdIndex);
+                String brand = cursor.getString(brandIndex);
+                String model = cursor.getString(modelIndex);
+                String type = cursor.getString(typeIndex);
+                String year = cursor.getString(yearIndex);
+                String color = cursor.getString(colorIndex);
+                double price = cursor.getDouble(priceIndex);
+                String image = cursor.getString(imageIndex);
+
+                car = new Car(retrievedCarId, brand, model, type, year, color, price, image);
+            }
+        } catch (Exception e) {
+            Log.e("Database Error", "Error fetching car by ID", e);
+        } finally {
+            db.close();
+        }
+
+        return car;
+    }
+
 
     // Method to check if a car with the given ID exists in the database
     public boolean checkCarExistence(int carId) {
@@ -404,8 +469,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 if (rememberMe==1){
                     rememberMe_bool=true;
                 }
-
-                User user = new User(email, firstName, lastName, gender, password, country, city, phoneNumber, rememberMe_bool);
+                List<Car> favoriteCars = getFavoriteCars(email);
+                User user = new User(email, firstName, lastName, gender, password, country, city, phoneNumber, rememberMe_bool,favoriteCars);
 
                 // Set the rememberMe field in the User object
                 user.setRememberMe(rememberMe == 1);
@@ -446,10 +511,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
                 boolean rememberMe_bool = (rememberMeIndex == 1);
 
-                // TODO: Retrieve favorite cars for the user
-                // List<Car> favoriteCars = getFavoriteCars(retrievedEmail);
+                //  TODO: Retrieve favorite cars for the user -> Done
+                 List<Car> favoriteCars = getFavoriteCars(retrievedEmail);
 
-                return new User(retrievedEmail, firstName, lastName, gender, retrievedPassword, country, city, phoneNumber, rememberMe_bool);
+                return new User(retrievedEmail, firstName, lastName, gender, retrievedPassword, country, city, phoneNumber, rememberMe_bool,favoriteCars);
             } else {
                 return null; // User not found
             }
@@ -460,6 +525,62 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             db.close();
         }
     }
+
+    //    ==================================================================================================
+    //    ================================  Reservation Methods  ===========================================
+
+
+    // Method to reserve a car
+    public long reserveCar(String userEmail, int carId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        // Get the current date and time in the required format
+        String reservationDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date());
+
+        values.put(COLUMN_USER_EMAIL_RESERVATION, userEmail);
+        values.put(COLUMN_CAR_ID_RESERVATION, carId);
+        values.put(COLUMN_RESERVATION_DATE, reservationDate);
+
+        long result = db.insert(TABLE_RESERVATIONS, null, values);
+        db.close();
+        return result;
+    }
+
+    // Method to get all reservations for a user with associated car details
+    public List<Car> getUserReservations(String userEmail) {
+        List<Car> reservedCars = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        String[] columns = {COLUMN_CAR_ID_RESERVATION, COLUMN_RESERVATION_DATE};
+
+        String selection = COLUMN_USER_EMAIL_RESERVATION + " = ?";
+        String[] selectionArgs = {userEmail};
+
+        try (Cursor cursor = db.query(TABLE_RESERVATIONS, columns, selection, selectionArgs, null, null, null)) {
+            while (cursor.moveToNext()) {
+                @SuppressLint("Range") int carId = cursor.getInt(cursor.getColumnIndex(COLUMN_CAR_ID_RESERVATION));
+                @SuppressLint("Range") String reservationDate = cursor.getString(cursor.getColumnIndex(COLUMN_RESERVATION_DATE));
+
+                // Retrieve car details for each reservation
+                Car car = getCarById(carId);
+
+                if (car != null) {
+                    // Set the reservation date for the reserved car
+                    car.setReservationDate(reservationDate);
+
+                    // Add the reserved car to the list
+                    reservedCars.add(car);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            db.close();
+        }
+
+        return reservedCars;
+    }
+
 
 
 

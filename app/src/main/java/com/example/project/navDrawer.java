@@ -44,6 +44,7 @@ public class navDrawer extends AppCompatActivity implements NavigationView.OnNav
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_home,
                 R.id.nav_car_menu,
+                R.id.nav_your_reservations,
                 R.id.nav_your_favorites
         )
                 .setOpenableLayout(drawer)
@@ -56,6 +57,7 @@ public class navDrawer extends AppCompatActivity implements NavigationView.OnNav
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
+
         return true;
     }
 

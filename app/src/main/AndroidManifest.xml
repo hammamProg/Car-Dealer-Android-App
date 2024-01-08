@@ -19,11 +19,9 @@
             android:exported="false"
             android:label="@string/title_activity_nav_drawer"
             android:theme="@style/Theme.Project.NoActionBar" />
+
         <activity
-            android:name=".Screens.ui.Your_Favorites"
-            android:exported="false" />
-        <activity
-            android:name=".Screens.ui.Car_Menu"
+            android:name=".Screens.Utilities.Car_Menu"
             android:exported="false" />
         <activity
             android:name=".Home"

@@ -11,6 +11,8 @@ public class Car implements Serializable {
     private String color;
     private double price;
     private String image;
+    private String reservationDate;
+
 
     public Car(int id, String brand, String model, String type, String year, String color, double price, String image) {
         this.id = id;
@@ -54,6 +56,11 @@ public class Car implements Serializable {
         return price;
     }
 
+    public String getReservationDate() {
+        return reservationDate;
+    }
+
+
     public String getImage() {
         return image;
     }
@@ -88,6 +95,10 @@ public class Car implements Serializable {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public void setReservationDate(String reservationDate) {
+        this.reservationDate = reservationDate;
     }
 
     @Override

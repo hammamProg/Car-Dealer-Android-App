@@ -1,10 +1,9 @@
-package com.example.project.Screens.ui;
-
-import static java.lang.System.exit;
+package com.example.project.Screens.Utilities;
 
 import android.content.Context;
 import android.os.Bundle;
 
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -31,8 +30,11 @@ public class Car_Menu_details extends Fragment {
     private TextView carPriceTextView;
     private ImageView carImageView;
 
-    private ImageView likeButton;
+    // for reservation screen:
+    private TextView carReservationDateTextView;
 
+    private ImageView likeButton;
+    private AppCompatButton reserveButton;
     private Context context;
     public Car_Menu_details(Context context) {
         this.context = context;
@@ -51,10 +53,13 @@ public class Car_Menu_details extends Fragment {
         carYearTextView = view.findViewById(R.id.view_Year);
         carPriceTextView = view.findViewById(R.id.view_Price);
         carImageView = view.findViewById(R.id.view_image);
+
         likeButton = view.findViewById(R.id.likeButton);
+        reserveButton = view.findViewById(R.id.reserveButton);
 
 
         Car car = (Car) getArguments().getSerializable("carObject");
+
 
         carNameTextView.setText("Brand: "+car.getBrand());
         carTypeTextView.setText("Type: "+car.getType());
@@ -65,10 +70,9 @@ public class Car_Menu_details extends Fragment {
         carPriceTextView.setText("Price: "+price_str+" $");
         Picasso.get().load(car.getImage()).into(carImageView);
 
-        // get the user data from SharedPrefrences
 
 
-        // Set an OnClickListener for the likeButton
+        // => like button
         likeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -76,17 +80,28 @@ public class Car_Menu_details extends Fragment {
                 User user = Login.getUserFromSharedPreferences(context);
 
                 // TODO - logic to check if the car is liked to this user or not
-
-
                 long result = dbHelper.addFavoriteCar(user.getEmail(), car.getId());
                 if (result != -1) {
-                    // The record was added successfully
-                    // You can add your logic here (e.g., show a toast, update UI, etc.)
                     Toast.makeText(context, "Car added to favorite list", Toast.LENGTH_SHORT).show();
                 } else {
                     Log.d("error"," adding favorite car");
-                    // There was an error adding the record
-                    // You can add your error handling logic here
+                }
+            }
+        });
+
+        // => reserve button
+        reserveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Call the addFavoriteCar method when the button is clicked
+                User user = Login.getUserFromSharedPreferences(context);
+
+                // TODO - logic to check if the car is liked to this user or not
+                long result = dbHelper.reserveCar(user.getEmail(), car.getId());
+                if (result != -1) {
+                    Toast.makeText(context, "Car reserved successfully", Toast.LENGTH_SHORT).show();
+                } else {
+                    Log.d("error"," adding favorite car");
                 }
             }
         });
@@ -95,7 +110,7 @@ public class Car_Menu_details extends Fragment {
     }
 
     private void loadImage(ImageView imageView, String imagePath) {
-        // Load image using Picasso or any other image loading library
+        // Load image using Picasso
         Picasso.get().load(imagePath).into(imageView);
     }
 }

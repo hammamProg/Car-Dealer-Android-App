@@ -1,4 +1,4 @@
-package com.example.project.ui.car_menu;
+package com.example.project.ui.your_reservation;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,10 +10,12 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.example.project.Database.DataBaseHelper;
+import com.example.project.Objects.User;
 import com.example.project.R;
+import com.example.project.Screens.Auth.Login;
 import com.example.project.Screens.Utilities.CarUtility;
 
-public class CarMenuFragment extends Fragment {
+public class yourReservation_Fragment extends Fragment {
 
     LinearLayout all_cars_view;
     DataBaseHelper dbHelper;
@@ -21,13 +23,17 @@ public class CarMenuFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_car_menu, container, false);
+        View root = inflater.inflate(R.layout.fragment_your_reservation, container, false);
 
         dbHelper = new DataBaseHelper(requireContext());
         all_cars_view = root.findViewById(R.id.all_cars_view);
 
+        // user
+        User user = Login.getUserFromSharedPreferences(getContext());
+
+
         // Call the viewSpecificCars method
-        CarUtility.viewSpecificCars(all_cars_view, dbHelper.getAllCars(), requireContext());
+        CarUtility.viewSpecificCars(all_cars_view, dbHelper.getUserReservations(user.getEmail()), requireContext(), Boolean.TRUE);
 
         return root;
     }
