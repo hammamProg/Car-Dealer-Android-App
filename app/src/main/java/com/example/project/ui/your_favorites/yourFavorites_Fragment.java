@@ -10,7 +10,9 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.example.project.Database.DataBaseHelper;
+import com.example.project.Objects.User;
 import com.example.project.R;
+import com.example.project.Screens.Auth.Login;
 import com.example.project.Screens.ui.CarUtility;
 
 public class yourFavorites_Fragment extends Fragment {
@@ -26,8 +28,11 @@ public class yourFavorites_Fragment extends Fragment {
         dbHelper = new DataBaseHelper(requireContext());
         all_cars_view = root.findViewById(R.id.all_cars_view);
 
+        // user
+        User user = Login.getUserFromSharedPreferences(getContext());
+
         // Call the viewSpecificCars method
-        CarUtility.viewSpecificCars(all_cars_view, dbHelper.getAllCars(), requireContext());
+        CarUtility.viewSpecificCars(all_cars_view, dbHelper.getFavoriteCars(user.getEmail()), requireContext());
 
         return root;
     }

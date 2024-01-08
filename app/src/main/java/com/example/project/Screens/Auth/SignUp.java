@@ -165,7 +165,8 @@ public class SignUp extends AppCompatActivity {
                 password_s,
                 country,
                 city,
-                phoneNumber
+                phoneNumber,
+                false
         );
 
         long result = dbHelper.addUser(newUser);

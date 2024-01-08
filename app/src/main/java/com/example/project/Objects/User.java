@@ -3,7 +3,7 @@ package com.example.project.Objects;
 import java.util.List;
 
 public class User {
-    private int isLoggedIn;
+    private boolean rememberMe;
     private String email;
     private String firstName;
     private String lastName;
@@ -16,7 +16,7 @@ public class User {
 
     // Constructor
     public User(String email, String firstName, String lastName, String gender, String password,
-                String country, String city, String phoneNumber) {
+                String country, String city, String phoneNumber, boolean rememberMe) {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -25,7 +25,7 @@ public class User {
         this.country = country;
         this.city = city;
         this.phoneNumber = phoneNumber;
-        this.isLoggedIn = isLoggedIn;
+        this.rememberMe = rememberMe;
 //        this.favoriteCars = favoriteCars;
     }
 
@@ -99,5 +99,13 @@ public class User {
 
     public void setFavoriteCars(List<Car> favoriteCars) {
         this.favoriteCars = favoriteCars;
+    }
+
+    public boolean isRememberMe() {
+        return rememberMe;
+    }
+
+    public void setRememberMe(boolean rememberMe) {
+        this.rememberMe = rememberMe;
     }
 }

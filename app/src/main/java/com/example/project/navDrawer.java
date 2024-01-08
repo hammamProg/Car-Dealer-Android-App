@@ -1,15 +1,17 @@
 package com.example.project;
-
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
-import android.widget.TextView;
 
-import com.example.project.Objects.User;
 import com.example.project.Screens.Auth.Login;
-import com.google.android.material.snackbar.Snackbar;
+import com.example.project.Screens.Connect_welcome.MainActivity;
 import com.google.android.material.navigation.NavigationView;
 
+import androidx.annotation.NonNull;
+import androidx.core.view.GravityCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -19,7 +21,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.project.databinding.ActivityNavDrawerBinding;
 
-public class navDrawer extends AppCompatActivity {
+public class navDrawer extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityNavDrawerBinding binding;
@@ -36,17 +38,9 @@ public class navDrawer extends AppCompatActivity {
         DrawerLayout drawer = binding.drawerLayout;
         NavigationView navigationView = binding.navView;
 
-        // Access the header view of the NavigationView
-        View headerView = navigationView.getHeaderView(0);
+        // Set this class as the listener for navigation item clicks
+        navigationView.setNavigationItemSelectedListener(this);
 
-        // Find the TextView within the header view
-        TextView headerTextView = headerView.findViewById(R.id.User_name);
-
-        User user = Login.getUserFromSharedPreferences(this);
-        headerTextView.setText(user.getFirstName()+" "+user.getLastName());
-
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_home,
                 R.id.nav_car_menu,
@@ -61,7 +55,6 @@ public class navDrawer extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
     }
@@ -69,7 +62,31 @@ public class navDrawer extends AppCompatActivity {
     @Override
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_nav_drawer);
-        return NavigationUI.navigateUp(navController, mAppBarConfiguration)
-                || super.onSupportNavigateUp();
+        return NavigationUI.navigateUp(navController, mAppBarConfiguration) || super.onSupportNavigateUp();
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+
+//        if (id == R.id.nav_logout) {
+//            // Handle the logout click here
+//            Log.d("Logout", "User pressed Logout");
+//
+//            // TODO
+//            Login.removeSharedPreferences(this);
+//
+//            Intent intent = new Intent(navDrawer.this, MainActivity.class);
+//            startActivity(intent);
+//            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+//            // Add your logout logic here, such as clearing shared preferences or performing other actions
+//            return true;
+//        }
+
+        // Handle other navigation item clicks
+
+        DrawerLayout drawer = binding.drawerLayout;
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 }

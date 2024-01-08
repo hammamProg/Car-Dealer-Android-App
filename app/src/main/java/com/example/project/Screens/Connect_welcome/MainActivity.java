@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -35,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         dbHelper = new DataBaseHelper(this);
+
 
         setProgress(false);
         button = (Button) findViewById(R.id.connectButton);
@@ -82,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // TODO -> implement the logout functionality & auto-logout after n-days of remeber me
         User user = Login.getUserFromSharedPreferences(this);
         if (user != null){
             // there's user in sharedPreference
@@ -90,9 +93,9 @@ public class MainActivity extends AppCompatActivity {
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         }else{
             // there's no user ( Don't do anything )
-
-
+            Log.d("SharedMemory", "user is null");
         }
+
     }
     public void setButtonText(String text) {
         button.setText(text);

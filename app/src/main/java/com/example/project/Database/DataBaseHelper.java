@@ -23,10 +23,11 @@ import java.util.List;
 
 public class DataBaseHelper extends SQLiteOpenHelper {
     private Context context;
-    // $ Database name and version
+
+    // Database name and version
     private static final String DATABASE_NAME = "Database_H&H";
     private static final int DATABASE_VERSION = 1;
-    // ========================================================
+
     // Table name and column names for user information
     private static final String TABLE_USERS = "users";
     private static final String COLUMN_EMAIL = "email";
@@ -37,8 +38,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_COUNTRY = "country";
     private static final String COLUMN_CITY = "city";
     private static final String COLUMN_PHONE_NUMBER = "phone_number";
-    private static final String COLUMN_IS_LOGGED_IN = "is_logged_in";
-
+    private static final String COLUMN_REMEMBER_ME = "remember_me";
 
     // Table name and column names for car information
     private static final String TABLE_CARS = "cars";
@@ -51,6 +51,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_CAR_PRICE = "price";
     private static final String COLUMN_IMAGE = "image";
 
+    // Table name and column names for favorite cars
     private static final String TABLE_FAVORITE_CARS = "favorite_cars";
     private static final String COLUMN_FAVORITE_ID = "favorite_id";
     private static final String COLUMN_USER_EMAIL = "user_email";  // Foreign key referencing users.email
@@ -80,7 +81,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                     COLUMN_COUNTRY + " TEXT," +
                     COLUMN_CITY + " TEXT," +
                     COLUMN_PHONE_NUMBER + " TEXT," +
-                    COLUMN_IS_LOGGED_IN + " INTEGER DEFAULT 0" +
+                    COLUMN_REMEMBER_ME + " INTEGER DEFAULT 0" +
                     ")";
 
     // SQL query to create the favorite_cars table
@@ -318,9 +319,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
 
     // Method to check if a user with the given email and password exists in the database
-    public boolean loginUser(String email, String password) {
+    public boolean loginUser(String email, String password, boolean rememberMe) {
         SQLiteDatabase db = this.getReadableDatabase();
-        String[] columns = {COLUMN_EMAIL, COLUMN_IS_LOGGED_IN};
+        String[] columns = {COLUMN_EMAIL, COLUMN_PASSWORD};
         String selection = COLUMN_EMAIL + " = ? AND " + COLUMN_PASSWORD + " = ?";
         String[] selectionArgs = {email, hashPassword(password)};
 
@@ -330,35 +331,18 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         try (Cursor cursor = db.query(TABLE_USERS, columns, selection, selectionArgs, null, null, null)) {
             if (cursor.moveToFirst()) {
                 // User with the provided email and password exists
-                int isLoggedInColumnIndex = cursor.getColumnIndex(COLUMN_IS_LOGGED_IN);
 
-                if (isLoggedInColumnIndex != -1) {
-                    int isLoggedIn = cursor.getInt(isLoggedInColumnIndex);
-
-                    if (isLoggedIn == 0) {
-                        // Update the user's login status to 1
-                        ContentValues values = new ContentValues();
-                        values.put(COLUMN_IS_LOGGED_IN, 1);
-
-                        db.update(TABLE_USERS, values, COLUMN_EMAIL + " = ?", new String[]{email});
-                        Log.d("db", "updated");
-
-                        // Return true to indicate successful login
-                        return true;
-                    } else {
-                        // User is already logged in
-                        Log.d("db", "User is already logged in");
-
-                        // Return true to indicate that the user is already logged in
-                        return true;
-                    }
-                } else {
-                    // Handle the case where the column index is not found
-                    Log.e("db", "Column index for COLUMN_IS_LOGGED_IN not found");
-
-                    // Return false to indicate login failure
-                    return false;
+                // Update the user's rememberMe status if requested
+                if (rememberMe) {
+                    ContentValues values = new ContentValues();
+                    // Assuming COLUMN_REMEMBER_ME is a new column added to the users table
+                    values.put(COLUMN_REMEMBER_ME, 1);
+                    db.update(TABLE_USERS, values, COLUMN_EMAIL + " = ?", new String[]{email});
+                    Log.d("db", "Remember me updated");
                 }
+
+                Log.d("db", "Login successful");
+                return true;
             } else {
                 // No user found with the provided email and password
                 Log.d("db", "No user found with the provided email and password");
@@ -393,7 +377,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         List<User> userList = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
         String[] columns = {COLUMN_EMAIL, COLUMN_PASSWORD, COLUMN_FIRST_NAME, COLUMN_LAST_NAME, COLUMN_GENDER,
-                COLUMN_COUNTRY, COLUMN_CITY, COLUMN_PHONE_NUMBER};
+                COLUMN_COUNTRY, COLUMN_CITY, COLUMN_PHONE_NUMBER, COLUMN_REMEMBER_ME};
 
         try (Cursor cursor = db.query(TABLE_USERS, columns, null, null, null, null, null)) {
             int emailIndex = cursor.getColumnIndex(COLUMN_EMAIL);
@@ -404,6 +388,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             int countryIndex = cursor.getColumnIndex(COLUMN_COUNTRY);
             int cityIndex = cursor.getColumnIndex(COLUMN_CITY);
             int phoneNumberIndex = cursor.getColumnIndex(COLUMN_PHONE_NUMBER);
+            int rememberMeIndex = cursor.getColumnIndex(COLUMN_REMEMBER_ME);
 
             while (cursor.moveToNext()) {
                 String email = cursor.getString(emailIndex);
@@ -414,11 +399,17 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 String country = cursor.getString(countryIndex);
                 String city = cursor.getString(cityIndex);
                 String phoneNumber = cursor.getString(phoneNumberIndex);
+                int rememberMe = cursor.getInt(rememberMeIndex);
+                boolean rememberMe_bool = false;
+                if (rememberMe==1){
+                    rememberMe_bool=true;
+                }
 
-//                TODO
-//                List<Car> favoriteCars = null;
+                User user = new User(email, firstName, lastName, gender, password, country, city, phoneNumber, rememberMe_bool);
 
-                User user = new User(email, firstName, lastName, gender, password, country, city, phoneNumber);
+                // Set the rememberMe field in the User object
+                user.setRememberMe(rememberMe == 1);
+
                 userList.add(user);
             }
         } catch (Exception e) {
@@ -433,8 +424,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     // Method to get a user by email
     public User getUserByEmail(String email) {
         SQLiteDatabase db = this.getReadableDatabase();
-        String[] columns = {COLUMN_EMAIL, COLUMN_PASSWORD, COLUMN_FIRST_NAME, COLUMN_LAST_NAME, COLUMN_GENDER,
-                COLUMN_COUNTRY, COLUMN_CITY, COLUMN_PHONE_NUMBER};
+        String[] columns = {
+                COLUMN_EMAIL, COLUMN_PASSWORD, COLUMN_FIRST_NAME, COLUMN_LAST_NAME, COLUMN_GENDER,
+                COLUMN_COUNTRY, COLUMN_CITY, COLUMN_PHONE_NUMBER, COLUMN_REMEMBER_ME
+        };
 
         String selection = COLUMN_EMAIL + " = ?";
         String[] selectionArgs = {email};
@@ -449,11 +442,14 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 @SuppressLint("Range") String country = cursor.getString(cursor.getColumnIndex(COLUMN_COUNTRY));
                 @SuppressLint("Range") String city = cursor.getString(cursor.getColumnIndex(COLUMN_CITY));
                 @SuppressLint("Range") String phoneNumber = cursor.getString(cursor.getColumnIndex(COLUMN_PHONE_NUMBER));
+                @SuppressLint("Range") int rememberMeIndex = cursor.getInt(cursor.getColumnIndex(COLUMN_REMEMBER_ME));
+
+                boolean rememberMe_bool = (rememberMeIndex == 1);
 
                 // TODO: Retrieve favorite cars for the user
                 // List<Car> favoriteCars = getFavoriteCars(retrievedEmail);
 
-                return new User(retrievedEmail, firstName, lastName, gender, retrievedPassword, country, city, phoneNumber);
+                return new User(retrievedEmail, firstName, lastName, gender, retrievedPassword, country, city, phoneNumber, rememberMe_bool);
             } else {
                 return null; // User not found
             }
@@ -464,6 +460,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             db.close();
         }
     }
+
 
 
 

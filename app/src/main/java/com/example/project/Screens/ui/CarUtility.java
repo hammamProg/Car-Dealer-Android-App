@@ -44,7 +44,7 @@ public class CarUtility {
     }
 
     private static void showCarDetails(Car car, Context context) {
-        Car_Menu_details fragment = new Car_Menu_details();
+        Car_Menu_details fragment = new Car_Menu_details(context);
         Bundle args = new Bundle();
 
         args.putSerializable("carObject", car);

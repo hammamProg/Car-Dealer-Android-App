@@ -31,12 +31,14 @@ public class Login extends AppCompatActivity {
     private EditText email, password;
     private CheckBox checkBoxRememberMe;
     private Button buttonLogin;
+    private static String sharedMemoryName = "UserShared";
+    private DataBaseHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
+        dbHelper = new DataBaseHelper(this);
         email = findViewById(R.id.emailEditText);
         password = findViewById(R.id.passwordEditText);
         checkBoxRememberMe = findViewById(R.id.rememberCheckBox);
@@ -72,8 +74,6 @@ public class Login extends AppCompatActivity {
 
     @SuppressLint("NotConstructor")
     public void Login(boolean checked){
-        DataBaseHelper dbHelper = new DataBaseHelper(this);
-
         String email_s = email.getText().toString().trim();
         String password_s = password.getText().toString();
 
@@ -89,7 +89,7 @@ public class Login extends AppCompatActivity {
             return;
         }
 
-        boolean result = dbHelper.loginUser(email_s,password_s);
+        boolean result = dbHelper.loginUser(email_s,password_s, checked);
 
         if (result){
             // Logged in success
@@ -98,7 +98,6 @@ public class Login extends AppCompatActivity {
 
             // -> get user data as User object
             saveUserToSharedPreferences(email_s,checked);
-
 
             Intent intent = new Intent(Login.this, navDrawer.class);
             startActivity(intent);
@@ -115,22 +114,21 @@ public class Login extends AppCompatActivity {
         if (!rememberMe) {
             return; // Don't save anything if rememberMe is false
         }
-        DataBaseHelper dbHelper = new DataBaseHelper(this);
         User user = dbHelper.getUserByEmail(email);
 
-        SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        SharedPreferences preferences = getSharedPreferences(sharedMemoryName, MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
 
         // Convert User object to JSON string
         String userJson = new Gson().toJson(user);
 
         editor.putString("userJson", userJson);
-        editor.putBoolean("rememberMe", rememberMe);
+        editor.putBoolean("rememberMe", true);
         editor.apply();
     }
 
     public static User getUserFromSharedPreferences(Context context) {
-        SharedPreferences preferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        SharedPreferences preferences = context.getSharedPreferences(sharedMemoryName, Context.MODE_PRIVATE);
 
         // Retrieve JSON string from SharedPreferences
         String userJson = preferences.getString("userJson", null);
@@ -144,13 +142,11 @@ public class Login extends AppCompatActivity {
     }
 
     public static void removeSharedPreferences(Context context) {
-        SharedPreferences preferences = context.getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        SharedPreferences preferences = context.getSharedPreferences(sharedMemoryName, MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
 
         // Clear all data in the SharedPreferences
         editor.clear();
-
-        // Apply the changes
         editor.apply();
     }
 
