@@ -11,7 +11,6 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -24,7 +23,6 @@ import com.example.project.Objects.User;
 import com.example.project.R;
 import com.example.project.navDrawer;
 
-import java.util.List;
 import com.google.gson.Gson;
 
 public class Login extends AppCompatActivity {
@@ -64,18 +62,13 @@ public class Login extends AppCompatActivity {
         signupTextView.setMovementMethod(LinkMovementMethod.getInstance());
         signupTextView.setText(spannableString);
 
-        buttonLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Login(checkBoxRememberMe.isChecked());
-            }
-        });
+        buttonLogin.setOnClickListener(view -> login(checkBoxRememberMe.isChecked()));
     }
 
-    @SuppressLint("NotConstructor")
-    public void Login(boolean checked){
+    public void login(boolean checked){
         String email_s = email.getText().toString().trim();
         String password_s = password.getText().toString();
+        //TODO password control shouldn't be here
 
         // Check if the email is valid
         if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email_s).matches()) {
@@ -94,7 +87,6 @@ public class Login extends AppCompatActivity {
         if (result){
             // Logged in success
             Toast.makeText(this, "Logged In Successfully", Toast.LENGTH_SHORT).show();
-
 
             // -> get user data as User object
             saveUserToSharedPreferences(email_s,checked);

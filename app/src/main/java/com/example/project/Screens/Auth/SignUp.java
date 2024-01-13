@@ -210,6 +210,7 @@ public class SignUp extends AppCompatActivity {
         phoneNumberTextView.setText(phoneNumberFormat);
     }
 
+    //TODO this should be phone number api
     private String getPhoneNumberFormat(String selectedCountry) {
         switch (selectedCountry) {
             case "Palestine":
