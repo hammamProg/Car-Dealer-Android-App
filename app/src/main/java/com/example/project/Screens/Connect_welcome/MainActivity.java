@@ -43,48 +43,45 @@ public class MainActivity extends AppCompatActivity {
 
         mediaPlayer = MediaPlayer.create(this, R.raw.car_engine_starting);
         logo_image = findViewById(R.id.logoImageView);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ConnectionAsyncTask connectionAsyncTask = new ConnectionAsyncTask(MainActivity.this);
-                connectionAsyncTask.execute(getResources().getString(R.string.api_cars));
+        button.setOnClickListener(v -> {
+            ConnectionAsyncTask connectionAsyncTask = new ConnectionAsyncTask(MainActivity.this);
+            connectionAsyncTask.execute(getResources().getString(R.string.api_cars));
 
-                mediaPlayer.start();
+            mediaPlayer.start();
 
-                // Animation
-                ImageView logo_image = findViewById(R.id.logoImageView);
-                Animation scaleAnimation = AnimationUtils.loadAnimation(MainActivity.this, R.anim.scale_animation);
-                scaleAnimation.setAnimationListener(new Animation.AnimationListener() {
-                    @Override
-                    public void onAnimationStart(Animation animation) {
-                        // Animation started
-                    }
+            // Animation
+            ImageView logo_image = findViewById(R.id.logoImageView);
+            Animation scaleAnimation = AnimationUtils.loadAnimation(MainActivity.this, R.anim.scale_animation);
+            scaleAnimation.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+                    // Animation started
+                }
 
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-                        // Animation finished
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                // Start the next activity after a 1-second delay
-                                Intent intent = new Intent(MainActivity.this, Login.class);
-                                startActivity(intent);
-                                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                            }
-                        }, 1000); // 1000 milliseconds = 1 second
-                    }
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    // Animation finished
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            // Start the next activity after a 1-second delay
+                            Intent intent = new Intent(MainActivity.this, Login.class);
+                            startActivity(intent);
+                            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                        }
+                    }, 1000); // 1000 milliseconds = 1 second
+                }
 
-                    @Override
-                    public void onAnimationRepeat(Animation animation) {
-                        // Animation repeated
-                    }
-                });
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+                    // Animation repeated
+                }
+            });
 
-                logo_image.startAnimation(scaleAnimation);
-            }
+            logo_image.startAnimation(scaleAnimation);
         });
 
-        // TODO -> implement the logout functionality & auto-logout after n-days of remeber me
+        // TODO -> implement the logout functionality & auto-logout after n-days of remember me
         User user = Login.getUserFromSharedPreferences(this);
         if (user != null){
             // there's user in sharedPreference

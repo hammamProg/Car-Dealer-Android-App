@@ -73,36 +73,30 @@ public class Car_Menu_details extends Fragment {
 
 
         // => like button
-        likeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Call the addFavoriteCar method when the button is clicked
-                User user = Login.getUserFromSharedPreferences(context);
+        likeButton.setOnClickListener(v -> {
+            // Call the addFavoriteCar method when the button is clicked
+            User user = Login.getUserFromSharedPreferences(context);
 
-                // TODO - logic to check if the car is liked to this user or not
-                long result = dbHelper.addFavoriteCar(user.getEmail(), car.getId());
-                if (result != -1) {
-                    Toast.makeText(context, "Car added to favorite list", Toast.LENGTH_SHORT).show();
-                } else {
-                    Log.d("error"," adding favorite car");
-                }
+            // TODO - logic to check if the car is liked to this user or not
+            long result = dbHelper.addFavoriteCar(user.getEmail(), car.getId());
+            if (result != -1) {
+                Toast.makeText(context, "Car added to favorite list", Toast.LENGTH_SHORT).show();
+            } else {
+                Log.d("error"," adding favorite car");
             }
         });
 
         // => reserve button
-        reserveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Call the addFavoriteCar method when the button is clicked
-                User user = Login.getUserFromSharedPreferences(context);
+        reserveButton.setOnClickListener(v -> {
+            // Call the addFavoriteCar method when the button is clicked
+            User user = Login.getUserFromSharedPreferences(context);
 
-                // TODO - logic to check if the car is liked to this user or not
-                long result = dbHelper.reserveCar(user.getEmail(), car.getId());
-                if (result != -1) {
-                    Toast.makeText(context, "Car reserved successfully", Toast.LENGTH_SHORT).show();
-                } else {
-                    Log.d("error"," adding favorite car");
-                }
+            // TODO - logic to check if the car is liked to this user or not
+            long result = dbHelper.reserveCar(user.getEmail(), car.getId());
+            if (result != -1) {
+                Toast.makeText(context, "Car reserved successfully", Toast.LENGTH_SHORT).show();
+            } else {
+                Log.d("error"," adding favorite car");
             }
         });
 

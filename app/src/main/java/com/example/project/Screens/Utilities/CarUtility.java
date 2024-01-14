@@ -62,12 +62,7 @@ public class CarUtility {
                 allCarsView.addView(space);
 
                 int finalI = i;
-                linearLayout1.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        showCarDetails(allCars.get(finalI), context);
-                    }
-                });
+                linearLayout1.setOnClickListener(v -> showCarDetails(allCars.get(finalI), context));
             }
         }
 
