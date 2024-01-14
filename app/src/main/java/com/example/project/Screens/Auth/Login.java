@@ -70,21 +70,21 @@ public class Login extends AppCompatActivity {
         String password_s = password.getText().toString();
         //TODO password control shouldn't be here
 
-        // Check if the email is valid
-        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email_s).matches()) {
-            Toast.makeText(this, "Enter a valid email address", Toast.LENGTH_SHORT).show();
-            return;
-        }
+//        // Check if the email is valid
+//        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email_s).matches()) {
+//            Toast.makeText(this, "Enter a valid email address", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+//
+//        // Check if the password meets the criteria
+//        if (password_s.length() < 5) {
+//            Toast.makeText(this, "Password must be at least 5 characters", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
 
-        // Check if the password meets the criteria
-        if (password_s.length() < 5) {
-            Toast.makeText(this, "Password must be at least 5 characters", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        boolean log_in_success = dbHelper.loginUser(email_s,password_s, checked);
 
-        boolean result = dbHelper.loginUser(email_s,password_s, checked);
-
-        if (result){
+        if (log_in_success){
             // Logged in success
             Toast.makeText(this, "Logged In Successfully", Toast.LENGTH_SHORT).show();
 
@@ -97,8 +97,7 @@ public class Login extends AppCompatActivity {
 
         }else{
             // Logged in failed
-            Toast.makeText(this, "Logged In Failed!! check your data", Toast.LENGTH_SHORT).show();
-            return;
+            Toast.makeText(this, "Logged In Failed!! Incorrect credentials.", Toast.LENGTH_SHORT).show();
         }
     }
 
