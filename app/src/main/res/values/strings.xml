@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Project</string>
-    <string name="api_countries_codes">https://gist.githubusercontent.com/anubhavshrimal/75f6183458db8c453306f93521e93d37/raw/f77e7598a8503f1f70528ae1cbf9f66755698a16/CountryCodes.json</string>
+    <string name="api_countries_codes">https://countriesnow.space/api/v0.1/countries</string>
     <string name="api_cars">https://6598e4f4a20d3dc41cef093f.mockapi.io/cars</string>
     <string-array name="gender_options">
         <item>Male</item>
@@ -16,25 +16,35 @@
     </string-array>
 
     <string-array name="palestine_cities">
-        <item>Gaza</item>
+        <item>Jerusalem</item>
+        <item>Bethlehem</item>
+        <item>Beit Jala</item>
+        <item>Beit Sahour</item>
+        <item>Hebron</item>
+        <item>Sabastia</item>
+        <item>Jericho</item>
+        <item>Ramallah and El-Bireh</item>
         <item>Nablus</item>
+        <item>Tulkarem</item>
         <item>Jenin</item>
-        <!-- Add more cities for Palestine -->
+        <item>Gaza</item>
+        <item>Rafah</item>
+        <item>Khan Younis</item>
     </string-array>
 
-    <string-array name="jordan_cities">
-        <item>Amman</item>
-        <item>Irbid</item>
-        <item>Zarqa</item>
-        <!-- Add more cities for Jordan -->
-    </string-array>
+<!--    <string-array name="jordan_cities">-->
+<!--        <item>Amman</item>-->
+<!--        <item>Irbid</item>-->
+<!--        <item>Zarqa</item>-->
+<!--        &lt;!&ndash; Add more cities for Jordan &ndash;&gt;-->
+<!--    </string-array>-->
 
-    <string-array name="syria_cities">
-        <item>Damascus</item>
-        <item>Aleppo</item>
-        <item>Homs</item>
-        <!-- Add more cities for Syria -->
-    </string-array>
+<!--    <string-array name="syria_cities">-->
+<!--        <item>Damascus</item>-->
+<!--        <item>Aleppo</item>-->
+<!--        <item>Homs</item>-->
+<!--        &lt;!&ndash; Add more cities for Syria &ndash;&gt;-->
+<!--    </string-array>-->
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_navigation_drawer">navigation_drawer</string>

@@ -14,10 +14,14 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.project.API.HttpManager;
+import com.example.project.API.MainJsonParser;
 import com.example.project.Database.DataBaseHelper;
 import com.example.project.Objects.User;
 import com.example.project.R;
 import com.example.project.navDrawer;
+
+import java.util.List;
 
 public class SignUp extends AppCompatActivity {
     private EditText email,firstName,lastName,password,confirmPassword,phone;
@@ -56,13 +60,26 @@ public class SignUp extends AppCompatActivity {
         genderSpinner.setAdapter(adapter);
 
         // ======================================================================== Country & City & Phone_zip_code Spinners
-        ArrayAdapter<CharSequence> countryAdapter = ArrayAdapter.createFromResource(
-                this,
-                R.array.country_options,
-                android.R.layout.simple_spinner_item
-        );
-        countryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        countrySpinner.setAdapter(countryAdapter);
+        new Thread(() -> {
+            // Perform background task
+            // Simulating a time-consuming task
+            String countries_json=HttpManager.getData(getResources().getString(R.string.api_countries_codes)+"/codes");
+            List<CharSequence> dataList = MainJsonParser.extractCountriesFromJson(countries_json);
+            System.out.println(countries_json);
+            // Update the UI with the result on the main thread
+            runOnUiThread(() -> {
+                assert dataList != null;
+                ArrayAdapter<CharSequence> countryAdapter=new ArrayAdapter<CharSequence>(this, android.R.layout.simple_spinner_item, dataList);
+//                ArrayAdapter<CharSequence> countryAdapter2 = ArrayAdapter.createFromResource(
+//                        this,
+//                        R.array.country_options,
+//                        android.R.layout.simple_spinner_item
+//                );
+                countryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                countrySpinner.setAdapter(countryAdapter);
+            });
+        }).start();
+
         countrySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
@@ -187,22 +204,29 @@ public class SignUp extends AppCompatActivity {
 
     private void populateCitySpinner(String selectedCountry) {
         Spinner citySpinner = findViewById(R.id.citySpinner);
+        // removing the country code from the selected country
+        new Thread(() -> {
+            ArrayAdapter<CharSequence> cityAdapter;
+            if(selectedCountry.startsWith("Palestinian Territory")){
+                cityAdapter= ArrayAdapter.createFromResource(
+                        this,
+                        R.array.palestine_cities,
+                        android.R.layout.simple_spinner_item
+                );
+            }else {
+                String country = selectedCountry.substring(0, selectedCountry.indexOf(","));
+                String citiesJSON = HttpManager.postData(getResources().getString(R.string.api_countries_codes) + "/cities", "{\"country\":\"" + country + "\"}");
+                List<CharSequence> dataList = MainJsonParser.extractCitiesFromJson(citiesJSON);
+                assert dataList != null;
+                cityAdapter= new ArrayAdapter<CharSequence>(this, android.R.layout.simple_spinner_item, dataList);
+            }
+            // Update the UI with the result on the main thread
+            runOnUiThread(() -> {
+                cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                citySpinner.setAdapter(cityAdapter);
+            });
+        }).start();
 
-        // Determine the array resource ID based on the selected country
-        int citiesArrayResourceId = getResources().getIdentifier(
-                selectedCountry.toLowerCase() + "_cities",
-                "array",
-                getPackageName()
-        );
-
-        // Populate City Spinner
-        ArrayAdapter<CharSequence> cityAdapter = ArrayAdapter.createFromResource(
-                this,
-                citiesArrayResourceId,
-                android.R.layout.simple_spinner_item
-        );
-        cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        citySpinner.setAdapter(cityAdapter);
     }
 
     private void updatePhoneNumberFormat(String selectedCountry) {
@@ -212,16 +236,7 @@ public class SignUp extends AppCompatActivity {
 
     //TODO this should be phone number api
     private String getPhoneNumberFormat(String selectedCountry) {
-        switch (selectedCountry) {
-            case "Palestine":
-                return "(00970)";
-            case "Jordan":
-                return "(00962)";
-            case "Syria":
-                return "(00963)";
-            // Add more cases for other countries as needed
-            default:
-                return "Unknown";
-        }
+        String[] tokens= selectedCountry.split(",");
+        return "("+tokens[tokens.length-1]+")";
     }
 }

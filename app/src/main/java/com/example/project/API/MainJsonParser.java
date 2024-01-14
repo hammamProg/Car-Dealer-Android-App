@@ -46,4 +46,43 @@ public class MainJsonParser {
 
         return cars;
     }
+
+    public static List<CharSequence> extractCountriesFromJson(String json){
+        List<CharSequence> countries;
+        try{
+            JSONObject mainJsonObject = new JSONObject(json);
+            JSONArray jsonArray = mainJsonObject.getJSONArray("data");
+            countries = new ArrayList<>();
+
+            for (int i=0; i<jsonArray.length(); i++){
+                JSONObject jsonObject = (JSONObject) jsonArray.get(i);
+                countries.add(jsonObject.getString("name")+", "+jsonObject.getString("dial_code"));
+            }
+
+        }catch (JSONException e){
+            e.printStackTrace();
+            return null;
+        }
+
+        return countries;
+    }
+
+    public static List<CharSequence> extractCitiesFromJson(String json){
+        List<CharSequence> cities;
+        try{
+            JSONObject mainJsonObject = new JSONObject(json);
+            JSONArray jsonArray = mainJsonObject.getJSONArray("data");
+            cities = new ArrayList<>();
+
+            for (int i=0; i<jsonArray.length(); i++){
+                cities.add(jsonArray.get(i).toString());
+            }
+
+        }catch (JSONException e){
+            e.printStackTrace();
+            return null;
+        }
+
+        return cities;
+    }
 }
