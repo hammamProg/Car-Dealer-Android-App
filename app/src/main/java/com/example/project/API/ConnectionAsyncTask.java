@@ -29,7 +29,7 @@ public class ConnectionAsyncTask extends AsyncTask<String, String,String> {
         super.onPostExecute(s);
         ((MainActivity) activity).setProgress(false);
         ((MainActivity) activity).setButtonText("connected");
-        List<Car> cars = CarJsonParser.getObjectFromJson(s);
+        List<Car> cars = MainJsonParser.extractCarsFromJson(s);
         ((MainActivity) activity).fillCars(cars);
     }
 }
