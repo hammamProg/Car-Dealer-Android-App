@@ -69,7 +69,7 @@ public class SignUp extends AppCompatActivity {
             // Update the UI with the result on the main thread
             runOnUiThread(() -> {
                 assert dataList != null;
-                ArrayAdapter<CharSequence> countryAdapter=new ArrayAdapter<CharSequence>(this, android.R.layout.simple_spinner_item, dataList);
+                ArrayAdapter<CharSequence> countryAdapter= new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, dataList);
 //                ArrayAdapter<CharSequence> countryAdapter2 = ArrayAdapter.createFromResource(
 //                        this,
 //                        R.array.country_options,
@@ -100,14 +100,11 @@ public class SignUp extends AppCompatActivity {
         // ####################  When Signup
 
 
-        Button SignUp = findViewById(R.id.signupButton);
-        SignUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //TODO > Check if the entered info are correct
-                signUp();
+        signUpButton = findViewById(R.id.signupButton);
+        signUpButton.setOnClickListener(view -> {
+            //TODO > Check if the entered info are correct
+            signUp();
 
-            }
         });
 
 
@@ -218,7 +215,7 @@ public class SignUp extends AppCompatActivity {
                 String citiesJSON = HttpManager.postData(getResources().getString(R.string.api_countries_codes) + "/cities", "{\"country\":\"" + country + "\"}");
                 List<CharSequence> dataList = MainJsonParser.extractCitiesFromJson(citiesJSON);
                 assert dataList != null;
-                cityAdapter= new ArrayAdapter<CharSequence>(this, android.R.layout.simple_spinner_item, dataList);
+                cityAdapter= new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, dataList);
             }
             // Update the UI with the result on the main thread
             runOnUiThread(() -> {
@@ -234,7 +231,6 @@ public class SignUp extends AppCompatActivity {
         phoneNumberTextView.setText(phoneNumberFormat);
     }
 
-    //TODO this should be phone number api
     private String getPhoneNumberFormat(String selectedCountry) {
         String[] tokens= selectedCountry.split(",");
         return "("+tokens[tokens.length-1]+")";
