@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 ConnectionAsyncTask connectionAsyncTask = new ConnectionAsyncTask(MainActivity.this);
-                connectionAsyncTask.execute("https://6598e4f4a20d3dc41cef093f.mockapi.io/cars");
+                connectionAsyncTask.execute(getResources().getString(R.string.api_cars));
 
                 mediaPlayer.start();
 
