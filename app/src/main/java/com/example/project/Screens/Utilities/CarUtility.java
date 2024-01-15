@@ -31,7 +31,7 @@ public class CarUtility {
         }else{isReservationValue=false;}
 
 
-        if (isReservationValue==true){
+        if (isReservationValue){
             for (int i = 0; i < allCars.size(); i++) {
                 LinearLayout linearLayout1 = createLinearLayout(context);
 
