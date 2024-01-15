@@ -6,15 +6,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
-
-import com.example.project.Objects.Car;
-import com.example.project.Objects.Reservation;
-import com.example.project.Objects.User;
+import com.example.project.Objects.*;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -24,9 +19,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 public class DataBaseHelper extends SQLiteOpenHelper {
-    private Context context;
+    private final Context context;
 
     // Database name and version
     private static final String DATABASE_NAME = "Database_H&H";
@@ -166,10 +162,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     // Method to get all cars from the database
     public List<Car> getAllCars() {
         List<Car> carList = new ArrayList<>();
-        SQLiteDatabase db = this.getReadableDatabase();
         String[] columns = {COLUMN_CAR_ID, COLUMN_BRAND, COLUMN_MODEL, COLUMN_CAR_TYPE, COLUMN_YEAR, COLUMN_COLOR, COLUMN_CAR_PRICE, COLUMN_IMAGE};
 
-        try (Cursor cursor = db.query(TABLE_CARS, columns, null, null, null, null, null)) {
+        try (SQLiteDatabase db = this.getReadableDatabase(); Cursor cursor = db.query(TABLE_CARS, columns, null, null, null, null, null)) {
             int carIdIndex = cursor.getColumnIndex(COLUMN_CAR_ID);
             int brandIndex = cursor.getColumnIndex(COLUMN_BRAND);
             int modelIndex = cursor.getColumnIndex(COLUMN_MODEL);
@@ -194,8 +189,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             }
         } catch (Exception e) {
             Log.e("Database Error", "Error fetching all cars", e);
-        } finally {
-            db.close();
         }
 
         return carList;
@@ -266,7 +259,21 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     // Method to add a new favorite car record
     public long addFavoriteCar(String userEmail, int carId) {
-        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = this.getReadableDatabase();
+        String[] columns = {COLUMN_CAR_ID, COLUMN_USER_EMAIL};
+        String selection = COLUMN_CAR_ID + " = ? AND " + COLUMN_USER_EMAIL + " = ?";
+        String[] selectionArgs = {String.valueOf(carId), userEmail};
+
+        Cursor cursor = db.query(TABLE_FAVORITE_CARS, columns, selection, selectionArgs, null, null, null);
+
+        int count = cursor.getCount();
+
+        cursor.close();
+        db.close();
+
+        if(count > 0) return -1;
+
+        db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
         values.put(COLUMN_USER_EMAIL, userEmail);
@@ -291,16 +298,13 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     // Method to get all favorite cars as List<Car> for a specific user email
     public List<Car> getFavoriteCars(String userEmail) {
         List<Car> favoriteCars = new ArrayList<>();
-        SQLiteDatabase db = this.getReadableDatabase();
 
         String query = "SELECT " + TABLE_CARS + ".* FROM " + TABLE_CARS +
                 " INNER JOIN " + TABLE_FAVORITE_CARS +
                 " ON " + TABLE_CARS + "." + COLUMN_CAR_ID + " = " + TABLE_FAVORITE_CARS + "." + COLUMN_CAR_ID_FK +
                 " WHERE " + TABLE_FAVORITE_CARS + "." + COLUMN_USER_EMAIL + " = ?";
-
         String[] selectionArgs = {userEmail};
-
-        try (Cursor cursor = db.rawQuery(query, selectionArgs)) {
+        try (SQLiteDatabase db = this.getReadableDatabase(); Cursor cursor = db.rawQuery(query, selectionArgs)) {
             while (cursor.moveToNext()) {
                 @SuppressLint("Range") int carId = cursor.getInt(cursor.getColumnIndex(COLUMN_CAR_ID));
                 @SuppressLint("Range") String brand = cursor.getString(cursor.getColumnIndex(COLUMN_BRAND));
@@ -316,8 +320,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             }
         } catch (Exception e) {
             Log.e("Database Error", "Error fetching favorite cars", e);
-        } finally {
-            db.close();
         }
 
         return favoriteCars;
@@ -385,15 +387,13 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     // Method to check if a user with the given email and password exists in the database
     public boolean loginUser(String email, String password, boolean rememberMe) {
-        SQLiteDatabase db = this.getReadableDatabase();
+
         String[] columns = {COLUMN_EMAIL, COLUMN_PASSWORD};
         String selection = COLUMN_EMAIL + " = ? AND " + COLUMN_PASSWORD + " = ?";
         String[] selectionArgs = {email, hashPassword(password)};
-
-        Log.d("email", email);
-        Log.d("password", hashPassword(password));
-
-        try (Cursor cursor = db.query(TABLE_USERS, columns, selection, selectionArgs, null, null, null)) {
+        try (SQLiteDatabase db = this.getReadableDatabase(); Cursor cursor = db.query(TABLE_USERS, columns, selection, selectionArgs, null, null, null)) {
+            Log.d("email", email);
+            Log.d("password", Objects.requireNonNull(hashPassword(password)));
             if (cursor.moveToFirst()) {
                 // User with the provided email and password exists
 
@@ -415,8 +415,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 // Return false to indicate login failure
                 return false;
             }
-        } finally {
-            db.close();
         }
     }
 
@@ -440,11 +438,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     // Method to get all users from the database
     public List<User> getAllUsers() {
         List<User> userList = new ArrayList<>();
-        SQLiteDatabase db = this.getReadableDatabase();
+
         String[] columns = {COLUMN_EMAIL, COLUMN_PASSWORD, COLUMN_FIRST_NAME, COLUMN_LAST_NAME, COLUMN_GENDER,
                 COLUMN_COUNTRY, COLUMN_CITY, COLUMN_PHONE_NUMBER, COLUMN_REMEMBER_ME};
-
-        try (Cursor cursor = db.query(TABLE_USERS, columns, null, null, null, null, null)) {
+        try (SQLiteDatabase db = this.getReadableDatabase(); Cursor cursor = db.query(TABLE_USERS, columns, null, null, null, null, null)) {
             int emailIndex = cursor.getColumnIndex(COLUMN_EMAIL);
             int firstNameIndex = cursor.getColumnIndex(COLUMN_FIRST_NAME);
             int passwordIndex = cursor.getColumnIndex(COLUMN_PASSWORD);
@@ -465,12 +462,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 String city = cursor.getString(cityIndex);
                 String phoneNumber = cursor.getString(phoneNumberIndex);
                 int rememberMe = cursor.getInt(rememberMeIndex);
-                boolean rememberMe_bool = false;
-                if (rememberMe==1){
-                    rememberMe_bool=true;
-                }
+                boolean rememberMe_bool = rememberMe == 1;
                 List<Car> favoriteCars = getFavoriteCars(email);
-                User user = new User(email, firstName, lastName, gender, password, country, city, phoneNumber, rememberMe_bool,favoriteCars);
+                User user = new User(email, firstName, lastName, gender, password, country, city, phoneNumber, rememberMe_bool, favoriteCars);
 
                 // Set the rememberMe field in the User object
                 user.setRememberMe(rememberMe == 1);
@@ -479,8 +473,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             }
         } catch (Exception e) {
             Log.e("Database Error", "Error fetching all users", e);
-        } finally {
-            db.close();
         }
 
         return userList;
@@ -488,16 +480,14 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     // Method to get a user by email
     public User getUserByEmail(String email) {
-        SQLiteDatabase db = this.getReadableDatabase();
+
         String[] columns = {
                 COLUMN_EMAIL, COLUMN_PASSWORD, COLUMN_FIRST_NAME, COLUMN_LAST_NAME, COLUMN_GENDER,
                 COLUMN_COUNTRY, COLUMN_CITY, COLUMN_PHONE_NUMBER, COLUMN_REMEMBER_ME
         };
-
         String selection = COLUMN_EMAIL + " = ?";
         String[] selectionArgs = {email};
-
-        try (Cursor cursor = db.query(TABLE_USERS, columns, selection, selectionArgs, null, null, null)) {
+        try (SQLiteDatabase db = this.getReadableDatabase(); Cursor cursor = db.query(TABLE_USERS, columns, selection, selectionArgs, null, null, null)) {
             if (cursor.moveToFirst()) {
                 @SuppressLint("Range") String retrievedEmail = cursor.getString(cursor.getColumnIndex(COLUMN_EMAIL));
                 @SuppressLint("Range") String retrievedPassword = cursor.getString(cursor.getColumnIndex(COLUMN_PASSWORD));
@@ -511,18 +501,15 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
                 boolean rememberMe_bool = (rememberMeIndex == 1);
 
-                //  TODO: Retrieve favorite cars for the user -> Done
-                 List<Car> favoriteCars = getFavoriteCars(retrievedEmail);
+                List<Car> favoriteCars = getFavoriteCars(retrievedEmail);
 
-                return new User(retrievedEmail, firstName, lastName, gender, retrievedPassword, country, city, phoneNumber, rememberMe_bool,favoriteCars);
+                return new User(retrievedEmail, firstName, lastName, gender, retrievedPassword, country, city, phoneNumber, rememberMe_bool, favoriteCars);
             } else {
                 return null; // User not found
             }
         } catch (Exception e) {
             Log.e("Database Error", "Error fetching user by email", e);
             return null;
-        } finally {
-            db.close();
         }
     }
 
@@ -550,13 +537,11 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     // Method to get all reservations for a user with associated car details
     public List<Car> getUserReservations(String userEmail) {
         List<Car> reservedCars = new ArrayList<>();
-        SQLiteDatabase db = this.getReadableDatabase();
-        String[] columns = {COLUMN_CAR_ID_RESERVATION, COLUMN_RESERVATION_DATE};
 
+        String[] columns = {COLUMN_CAR_ID_RESERVATION, COLUMN_RESERVATION_DATE};
         String selection = COLUMN_USER_EMAIL_RESERVATION + " = ?";
         String[] selectionArgs = {userEmail};
-
-        try (Cursor cursor = db.query(TABLE_RESERVATIONS, columns, selection, selectionArgs, null, null, null)) {
+        try (SQLiteDatabase db = this.getReadableDatabase(); Cursor cursor = db.query(TABLE_RESERVATIONS, columns, selection, selectionArgs, null, null, null)) {
             while (cursor.moveToNext()) {
                 @SuppressLint("Range") int carId = cursor.getInt(cursor.getColumnIndex(COLUMN_CAR_ID_RESERVATION));
                 @SuppressLint("Range") String reservationDate = cursor.getString(cursor.getColumnIndex(COLUMN_RESERVATION_DATE));
@@ -574,15 +559,45 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             }
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            db.close();
         }
 
         return reservedCars;
     }
 
+// Cars price between min and max
 
+    public List<Car> getCarsByPrice(double min, double max) {
+        List<Car> carList = new ArrayList<>();
+        String[] columns = {COLUMN_CAR_ID, COLUMN_BRAND, COLUMN_MODEL, COLUMN_CAR_TYPE, COLUMN_YEAR, COLUMN_COLOR, COLUMN_CAR_PRICE, COLUMN_IMAGE};
 
+        try (SQLiteDatabase db = this.getReadableDatabase(); Cursor cursor = db.query(TABLE_CARS, columns, COLUMN_CAR_PRICE + " BETWEEN ? AND ?", new String[]{String.valueOf(min), String.valueOf(max)}, null, null, null)) {
+            int carIdIndex = cursor.getColumnIndex(COLUMN_CAR_ID);
+            int brandIndex = cursor.getColumnIndex(COLUMN_BRAND);
+            int modelIndex = cursor.getColumnIndex(COLUMN_MODEL);
+            int typeIndex = cursor.getColumnIndex(COLUMN_CAR_TYPE);
+            int yearIndex = cursor.getColumnIndex(COLUMN_YEAR);
+            int colorIndex = cursor.getColumnIndex(COLUMN_COLOR);
+            int priceIndex = cursor.getColumnIndex(COLUMN_CAR_PRICE);
+            int imageIndex = cursor.getColumnIndex(COLUMN_IMAGE);
 
+            while (cursor.moveToNext()) {
+                int carId = cursor.getInt(carIdIndex);
+                String brand = cursor.getString(brandIndex);
+                String model = cursor.getString(modelIndex);
+                String type = cursor.getString(typeIndex);
+                String year = cursor.getString(yearIndex);
+                String color = cursor.getString(colorIndex);
+                double price = cursor.getDouble(priceIndex);
+                String image = cursor.getString(imageIndex);
+
+                Car car = new Car(carId, brand, model, type, year, color, price, image);
+                carList.add(car);
+            }
+        } catch (Exception e) {
+            Log.e("Database Error", "Error fetching all cars", e);
+        }
+
+        return carList;
+    }
 
 }

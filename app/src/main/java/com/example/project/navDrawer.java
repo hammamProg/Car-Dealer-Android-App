@@ -49,9 +49,12 @@ public class navDrawer extends AppCompatActivity implements NavigationView.OnNav
         )
                 .setOpenableLayout(drawer)
                 .build();
+        //on item menu selected print hello
+
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_nav_drawer);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
     }
 
     @Override

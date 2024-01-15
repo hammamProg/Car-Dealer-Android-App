@@ -28,4 +28,8 @@
         android:name="com.example.project.ui.your_favorites.yourFavorites_Fragment"
         android:label="@string/your_favorites"
         tools:layout="@layout/fragment_your_favorites" />
+    <action
+        android:id="@+id/nav_logout"
+
+      />
 </navigation>

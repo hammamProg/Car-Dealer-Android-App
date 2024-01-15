@@ -6,13 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 
 import com.example.project.API.HttpManager;
 import com.example.project.API.MainJsonParser;
@@ -158,6 +152,16 @@ public class SignUp extends AppCompatActivity {
         // Check if the phone number is valid (you may need a more robust validation based on your requirements)
         if (phoneNumber.length() < 5) {
             Toast.makeText(this, "Enter a valid phone number", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (first_Name.length() < 3) {
+            Toast.makeText(this, "Enter a valid first name", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (last_Name.length() < 3) {
+            Toast.makeText(this, "Enter a valid last name", Toast.LENGTH_SHORT).show();
             return;
         }
 
