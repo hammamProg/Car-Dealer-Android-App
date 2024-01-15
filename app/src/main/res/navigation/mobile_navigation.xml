@@ -7,25 +7,29 @@
 
     <fragment
         android:id="@+id/nav_home"
-        android:name="com.example.project.ui.home.HomeFragment"
+        android:name="com.main.project.UI.HomeFragment"
         android:label="H&amp;H"
         tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/nav_car_menu"
-        android:name="com.example.project.ui.car_menu.CarMenuFragment"
+        android:name="com.main.project.UI.CarMenuFragment"
         android:label="Car Menu"
         tools:layout="@layout/fragment_car_menu" />
 
     <fragment
         android:id="@+id/nav_your_reservations"
-        android:name="com.example.project.ui.your_reservation.yourReservation_Fragment"
+        android:name="com.main.project.UI.yourReservation_Fragment"
         android:label="@string/your_reservations"
         tools:layout="@layout/fragment_your_reservation" />
 
     <fragment
         android:id="@+id/nav_your_favorites"
-        android:name="com.example.project.ui.your_favorites.yourFavorites_Fragment"
+        android:name="com.main.project.UI.yourFavorites_Fragment"
         android:label="@string/your_favorites"
         tools:layout="@layout/fragment_your_favorites" />
+    <action
+        android:id="@+id/nav_logout"
+
+      />
 </navigation>

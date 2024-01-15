@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Project</string>
-
+    <string name="api_countries_codes">https://countriesnow.space/api/v0.1/countries</string>
+    <string name="api_cars">https://6598e4f4a20d3dc41cef093f.mockapi.io/cars</string>
     <string-array name="gender_options">
         <item>Male</item>
         <item>Female</item>
@@ -15,24 +16,20 @@
     </string-array>
 
     <string-array name="palestine_cities">
-        <item>Gaza</item>
+        <item>Jerusalem</item>
+        <item>Bethlehem</item>
+        <item>Beit Jala</item>
+        <item>Beit Sahour</item>
+        <item>Hebron</item>
+        <item>Sabastia</item>
+        <item>Jericho</item>
+        <item>Ramallah and El-Bireh</item>
         <item>Nablus</item>
+        <item>Tulkarem</item>
         <item>Jenin</item>
-        <!-- Add more cities for Palestine -->
-    </string-array>
-
-    <string-array name="jordan_cities">
-        <item>Amman</item>
-        <item>Irbid</item>
-        <item>Zarqa</item>
-        <!-- Add more cities for Jordan -->
-    </string-array>
-
-    <string-array name="syria_cities">
-        <item>Damascus</item>
-        <item>Aleppo</item>
-        <item>Homs</item>
-        <!-- Add more cities for Syria -->
+        <item>Gaza</item>
+        <item>Rafah</item>
+        <item>Khan Younis</item>
     </string-array>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -56,6 +53,19 @@
     <string name="calll_us_or_find_us">Call Us or Find Us</string>
     <string name="logout">Logout</string>
     <string name="title_activity_nav_drawer">navDrawer</string>
-
+    <string name="welcome_to_the_journey_of_h_h_where_passion_for_cars_meets_integrity_in_business_explore_our_history_and_commitment_to_providing_quality_vehicles_and_exceptional_service"><![CDATA[Welcome to the journey of H&H, where passion for cars meets integrity in business. Explore our history and commitment to providing quality vehicles and exceptional service.]]></string>
+    <string name="year_1998_the_inception">Year 2012: The Inception</string>
+    <string name="in_1998_huthayfa_and_hammam_founded_h_amp_h_auto_emporium"><![CDATA[In 2010, Huthayfa and Hammam founded H&H Auto Emporium.]]></string>
+    <string name="year_2005_driven_by_success">Year 2013: Driven by Success</string>
+    <string name="the_dealership_expanded_offering_a_wide_range_of_vehicles">The dealership expanded, offering a wide range of vehicles.</string>
+    <string name="year_2010_embracing_technology">Year 2016: Embracing Technology</string>
+    <string name="h_amp_h_introduced_an_easy_to_use_website_for_online_browsing_and_test_drive_scheduling"><![CDATA[H&H introduced an easy-to-use application for online browsing and test drive scheduling.]]></string>
+    <string name="year_2015_eco_friendly_initiatives">Year 2020: Eco-Friendly Initiatives</string>
+    <string name="in_response_to_environmental_concerns_h_amp_h_introduced_eco_friendly_vehicle_options_and_green_practices"><![CDATA[In response to environmental concerns, H&H introduced eco-friendly vehicle options and green practices.]]></string>
+    <string name="year_2021_passing_the_legacy">Year 2022: Passing the Legacy</string>
+    <string name="the_next_generation_took_over_continuing_the_legacy_of_customer_satisfaction">The next generation took over, continuing the legacy of customer satisfaction.</string>
+    <string name="present_day_h_amp_h_auto_emporium_today"><![CDATA[Present Day: H&H Today]]></string>
+    <string name="today_h_amp_h_auto_emporium_is_a_reputable_dealership_with_a_focus_on_quality_vehicles_and_service"><![CDATA[Today, H&H is a reputable dealership with a focus on quality vehicles and service.]]></string>
+    <string name="h_amp_h"><![CDATA[H&H]]></string>
 
 </resources>
