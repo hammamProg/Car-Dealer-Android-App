@@ -13,7 +13,7 @@ import com.main.project.API.MainJsonParser;
 import com.main.project.Database.DataBaseHelper;
 import com.main.project.Objects.User;
 import com.main.project.R;
-import com.main.project.NavDrawer;
+import com.main.project.UI.NavDrawer;
 
 import java.util.List;
 

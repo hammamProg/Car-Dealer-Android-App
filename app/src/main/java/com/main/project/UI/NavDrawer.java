@@ -1,4 +1,4 @@
-package com.main.project;
+package com.main.project.UI;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.Menu;
@@ -14,6 +14,7 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.main.project.R;
 import com.main.project.databinding.ActivityNavDrawerBinding;
 
 public class NavDrawer extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
