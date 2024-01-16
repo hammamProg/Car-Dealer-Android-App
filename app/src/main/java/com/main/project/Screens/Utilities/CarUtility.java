@@ -1,21 +1,30 @@
 package com.main.project.Screens.Utilities;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Space;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
+
+import com.main.project.Database.DataBaseHelper;
 import com.main.project.Objects.Car;
+import com.main.project.Objects.User;
 import com.main.project.R;
+import com.main.project.Screens.Auth.Login;
 import com.squareup.picasso.Picasso;
 import java.util.List;
 import java.util.Locale;
@@ -156,16 +165,52 @@ public class CarUtility {
         // Create TextView for reservation date
         TextView reservationDateTextView = createTextView(context, car.getReservationDate());
         reservationDateTextView.setId(View.generateViewId()); // Assign a unique ID for later reference
-        reservationDateTextView.setBackgroundResource(R.drawable.view_background);
-        reservationDateTextView.setTextColor(Color.parseColor("#FFFFFF"));
         reservationDateTextView.setPadding(5,0,5,0);
         reservationDateTextView.setGravity(Gravity.CENTER);
+
+        //create button to end reservation
+        Button endReservationButton = new Button(context);
+        endReservationButton.setText("End Reservation");
+        endReservationButton.setBackgroundResource(R.drawable.view_background);
+        endReservationButton.setTextColor(Color.parseColor("#FFFFFF"));
 
         // Add views to cardLayout
         cardLayout.addView(imageView);
         cardLayout.addView(detailsLayout);
         addSpacer(cardLayout, 10, 0, context); // Add a spacer with 8dp width and 0dp height
-        cardLayout.addView(reservationDateTextView);
+        // Add a vertical linear layout with button underneath the reservation date
+        LinearLayout buttonLayout = new LinearLayout(context);
+        buttonLayout.setLayoutParams(new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        buttonLayout.setOrientation(LinearLayout.VERTICAL);
+        buttonLayout.setGravity(Gravity.CENTER);
+        buttonLayout.addView(reservationDateTextView);
+        buttonLayout.addView(endReservationButton);
+        // Add the buttonLayout to the cardLayout
+        cardLayout.addView(buttonLayout);
+
+        endReservationButton.setOnClickListener(v -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            builder.setTitle("Confirm End Reservation");
+            builder.setMessage("Are you sure you want to end the reservation of this car?");
+            // Set up the buttons
+            builder.setPositiveButton("Confirm", (dialog, which) -> {
+                User user = Login.getUserFromSharedPreferences(context);
+                DataBaseHelper dbHelper = new DataBaseHelper(context);
+                long result = dbHelper.endReservation(user.getEmail(), car.getId());
+                if (result != -1) {
+                    Toast.makeText(context, "Car reservation ended successfully", Toast.LENGTH_SHORT).show();
+                    linearLayout.removeView(cardLayout);
+                } else {
+                    Log.d("error","Ending reservation a car");
+                }
+            });
+            builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+
+            AlertDialog dialog = builder.create();
+            dialog.show();
+
+        });
 
         // Add the cardLayout to the main linearLayout
         linearLayout.addView(cardLayout);

@@ -1,11 +1,8 @@
 package com.main.project.Screens.Utilities;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
-
-import androidx.appcompat.widget.AppCompatButton;
-import androidx.fragment.app.Fragment;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +10,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.fragment.app.Fragment;
 
 import com.main.project.Database.DataBaseHelper;
 import com.main.project.Objects.Car;
@@ -106,15 +106,25 @@ public class Car_Menu_details extends Fragment {
 
         // => reserve button
         reserveButton.setOnClickListener(v -> {
-            User user = Login.getUserFromSharedPreferences(context);
 
-            // TODO - logic to check if the car is liked to this user or not
-            long result = dbHelper.reserveCar(user.getEmail(), car.getId());
-            if (result != -1) {
-                Toast.makeText(context, "Car reserved successfully", Toast.LENGTH_SHORT).show();
-            } else {
-                Log.d("error"," adding favorite car");
-            }
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            builder.setTitle("Confirm Reservation");
+            builder.setMessage("Are you sure you want to reserve this car for "+car.getPrice()+"$?");
+            // Set up the buttons
+            builder.setPositiveButton("Confirm", (dialog, which) -> {
+                User user = Login.getUserFromSharedPreferences(context);
+                long result = dbHelper.reserveCar(user.getEmail(), car.getId());
+                if (result != -1) {
+                    Toast.makeText(context, "Car reserved successfully", Toast.LENGTH_SHORT).show();
+                } else {
+                    Log.d("error","reserving a car");
+                }
+            });
+            builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+
+            AlertDialog dialog = builder.create();
+            dialog.show();
+
         });
 
         return view;

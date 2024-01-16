@@ -604,4 +604,13 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return carList;
     }
 
+    public int endReservation(String userEmail, int carId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String whereClause = COLUMN_USER_EMAIL_RESERVATION + " = ? AND " + COLUMN_CAR_ID_RESERVATION + " = ?";
+        String[] whereArgs = {userEmail, String.valueOf(carId)};
+
+        int result = db.delete(TABLE_RESERVATIONS, whereClause, whereArgs);
+        db.close();
+        return result;
+    }
 }
