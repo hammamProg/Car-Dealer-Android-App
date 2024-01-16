@@ -28,7 +28,7 @@ public class Login extends AppCompatActivity {
     private EditText email, password;
     private CheckBox checkBoxRememberMe;
     private Button buttonLogin;
-    private static String sharedMemoryName = "UserShared";
+    public static String sharedMemoryName = "UserShared";
     private DataBaseHelper dbHelper;
 
     @Override

@@ -34,6 +34,12 @@
         android:label="Special Offers"
         tools:layout="@layout/fragment_special_offers" />
 
+    <fragment
+        android:id="@+id/nav_profile"
+        android:name="com.main.project.UI.ProfileFragment"
+        android:label="Profile"
+        tools:layout="@layout/fragment_profile" />
+
     <action
         android:id="@+id/nav_logout"
 

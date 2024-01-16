@@ -613,4 +613,20 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         db.close();
         return result;
     }
+
+    //update user info in user table
+    public long updateUser(User user) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_FIRST_NAME, user.getFirstName());
+        values.put(COLUMN_LAST_NAME, user.getLastName());
+        values.put(COLUMN_GENDER, user.getGender());
+        values.put(COLUMN_PASSWORD, hashPassword(user.getPassword()));
+        values.put(COLUMN_COUNTRY, user.getCountry());
+        values.put(COLUMN_CITY, user.getCity());
+        values.put(COLUMN_PHONE_NUMBER, user.getPhoneNumber());
+        long result = db.update(TABLE_USERS, values, COLUMN_EMAIL + " = ?", new String[]{user.getEmail()});
+        db.close();
+        return result;
+    }
 }

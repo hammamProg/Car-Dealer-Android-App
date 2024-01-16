@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.main.project.UI.ProfileFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+
+        <EditText
+            android:id="@+id/firstNameEditText"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:hint="First Name"
+            android:inputType="text"
+            android:layout_below="@id/logoImageView"
+            android:layout_marginTop="8dp"/>
+
+        <EditText
+            android:id="@+id/lastNameEditText"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:hint="Last Name"
+            android:inputType="text"
+            android:layout_below="@id/firstNameEditText"
+            android:layout_marginTop="8dp"/>
+
+        <Spinner
+            android:id="@+id/genderSpinner"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/emailEditText"
+            android:layout_marginTop="8dp"/>
+
+        <EditText
+            android:id="@+id/passwordSignUpEditText"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:layout_below="@id/genderSpinner"
+            android:layout_marginTop="8dp"/>
+
+        <EditText
+            android:id="@+id/confirmPasswordEditText"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:hint="Confirm Password"
+            android:inputType="textPassword"
+            android:layout_below="@id/passwordSignUpEditText"
+            android:layout_marginTop="8dp"/>
+
+        <Spinner
+            android:id="@+id/countrySpinner"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/confirmPasswordEditText"
+            android:layout_marginTop="8dp"/>
+
+        <Spinner
+            android:id="@+id/citySpinner"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/countrySpinner"
+            android:layout_marginTop="8dp"/>
+
+        <LinearLayout
+            android:id="@+id/phoneNumber"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/citySpinner"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/ZipAreaTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="(00970)"
+                android:inputType="phone"
+                android:layout_below="@id/citySpinner"
+                android:layout_marginTop="8dp"/>
+            <EditText
+                android:id="@+id/phoneNumberEditText"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="Phone Number"
+                android:inputType="phone"
+                android:layout_marginTop="8dp"/>
+        </LinearLayout>
+
+        <!-- Save Button -->
+        <Button
+            android:id="@+id/buttonSave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Save"/>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
