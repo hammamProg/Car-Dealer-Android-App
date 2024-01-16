@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.main.project.UI.HomeFragment">
+
+    <!-- activity_history.xml -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <Button
+            android:id="@+id/buttonCallDealer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Call Car Dealer"/>
+
+        <Button
+            android:id="@+id/buttonOpenMaps"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Locate Dealer on Maps"/>
+
+        <Button
+            android:id="@+id/buttonOpenGmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Email Car Dealer"/>
+
+    </LinearLayout>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

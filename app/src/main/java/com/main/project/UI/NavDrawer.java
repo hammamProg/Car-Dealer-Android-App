@@ -46,7 +46,8 @@ public class NavDrawer extends AppCompatActivity implements NavigationView.OnNav
                 R.id.nav_your_reservations,
                 R.id.nav_your_favorites,
                 R.id.nav_special_offers,
-                R.id.nav_profile
+                R.id.nav_profile,
+                R.id.nav_call_us
         )
                 .setOpenableLayout(drawer)
                 .build();
@@ -76,7 +77,6 @@ public class NavDrawer extends AppCompatActivity implements NavigationView.OnNav
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-
 //        if (id == R.id.nav_logout) {
 //            // Handle the logout click here
 //            Log.d("Logout", "User pressed Logout");

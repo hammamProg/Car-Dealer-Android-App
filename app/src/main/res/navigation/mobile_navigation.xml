@@ -39,6 +39,11 @@
         android:name="com.main.project.UI.ProfileFragment"
         android:label="Profile"
         tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/nav_call_us"
+        android:name="com.main.project.UI.CallUsFragment"
+        android:label="Call Us"
+        tools:layout="@layout/fragment_call_us" />
 
     <action
         android:id="@+id/nav_logout"
