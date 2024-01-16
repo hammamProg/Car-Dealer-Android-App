@@ -85,7 +85,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/button_background"
                 android:padding="12dp"
-                android:src="@drawable/unfavorite_icon" />
+                android:src="@drawable/unfavourite_icon" />
 
         </LinearLayout>
     </LinearLayout>

@@ -256,12 +256,11 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     //    ================================  Favorite Methods  ===========================================
 
-
-    // Method to add a new favorite car record
-    public long addFavoriteCar(String userEmail, int carId) {
+    //Method to check if car is already in favorite list
+    public boolean checkIfCarIsInFavorite(String userEmail, int carId) {
         SQLiteDatabase db = this.getReadableDatabase();
-        String[] columns = {COLUMN_CAR_ID, COLUMN_USER_EMAIL};
-        String selection = COLUMN_CAR_ID + " = ? AND " + COLUMN_USER_EMAIL + " = ?";
+        String[] columns = {COLUMN_CAR_ID_FK, COLUMN_USER_EMAIL};
+        String selection = COLUMN_CAR_ID_FK + " = ? AND " + COLUMN_USER_EMAIL + " = ?";
         String[] selectionArgs = {String.valueOf(carId), userEmail};
 
         Cursor cursor = db.query(TABLE_FAVORITE_CARS, columns, selection, selectionArgs, null, null, null);
@@ -271,9 +270,14 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         cursor.close();
         db.close();
 
-        if(count > 0) return -1;
+        // If count is greater than 0, the car with the given ID exists
+        return count > 0;
+    }
 
-        db = this.getWritableDatabase();
+    // Method to add a new favorite car record
+    public long addFavoriteCar(String userEmail, int carId) {
+        if(checkIfCarIsInFavorite(userEmail,carId)) return -1;
+        SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
         values.put(COLUMN_USER_EMAIL, userEmail);

@@ -57,7 +57,6 @@ public class Car_Menu_details extends Fragment {
         likeButton = view.findViewById(R.id.likeButton);
         reserveButton = view.findViewById(R.id.reserveButton);
 
-
         Car car = (Car) getArguments().getSerializable("carObject");
 
 
@@ -70,25 +69,43 @@ public class Car_Menu_details extends Fragment {
         carPriceTextView.setText("Price: "+price_str+" $");
         Picasso.get().load(car.getImage()).into(carImageView);
 
+        if(dbHelper.checkIfCarIsInFavorite(Login.getUserFromSharedPreferences(context).getEmail(), car.getId())){
+            likeButton.setImageResource(R.drawable.favourite_icon);
+        }else{
+            likeButton.setImageResource(R.drawable.unfavourite_icon);
+        }
 
 
         // => like button
         likeButton.setOnClickListener(v -> {
             // Call the addFavoriteCar method when the button is clicked
             User user = Login.getUserFromSharedPreferences(context);
-
-            // TODO - logic to check if the car is liked to this user or not
-            long result = dbHelper.addFavoriteCar(user.getEmail(), car.getId());
-            if (result != -1) {
-                Toast.makeText(context, "Car added to favorite list", Toast.LENGTH_SHORT).show();
-            } else {
-                Log.d("error"," adding favorite car");
+            if(dbHelper.checkIfCarIsInFavorite(user.getEmail(), car.getId())){
+                long result = dbHelper.deleteFavoriteCar(user.getEmail(), car.getId());
+                if (result != -1) {
+                    likeButton.setImageResource(R.drawable.unfavourite_icon);
+                } else {
+                    Log.d("error"," removing favorite car");
+                }
+            }else{
+                long result = dbHelper.addFavoriteCar(user.getEmail(), car.getId());
+                if (result != -1) {
+                    Toast.makeText(context, "Car added to favorite list", Toast.LENGTH_SHORT).show();
+                } else {
+                    Log.d("error"," adding favorite car");
+                }
             }
+            if(dbHelper.checkIfCarIsInFavorite(Login.getUserFromSharedPreferences(context).getEmail(), car.getId())){
+                likeButton.setImageResource(R.drawable.favourite_icon);
+            }else{
+                likeButton.setImageResource(R.drawable.unfavourite_icon);
+            }
+
+
         });
 
         // => reserve button
         reserveButton.setOnClickListener(v -> {
-            // Call the addFavoriteCar method when the button is clicked
             User user = Login.getUserFromSharedPreferences(context);
 
             // TODO - logic to check if the car is liked to this user or not
