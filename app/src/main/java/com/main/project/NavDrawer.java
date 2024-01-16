@@ -16,7 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.main.project.databinding.ActivityNavDrawerBinding;
 
-public class navDrawer extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class NavDrawer extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityNavDrawerBinding binding;

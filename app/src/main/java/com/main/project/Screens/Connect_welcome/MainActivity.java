@@ -20,7 +20,7 @@ import com.main.project.Objects.Car;
 import com.main.project.Objects.User;
 import com.main.project.R;
 import com.main.project.Screens.Auth.Login;
-import com.main.project.navDrawer;
+import com.main.project.NavDrawer;
 
 import java.util.List;
 
@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
         User user = Login.getUserFromSharedPreferences(this);
         if (user != null){
             // there's user in sharedPreference
-            Intent intent = new Intent(MainActivity.this, navDrawer.class);
+            Intent intent = new Intent(MainActivity.this, NavDrawer.class);
             startActivity(intent);
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         }else{

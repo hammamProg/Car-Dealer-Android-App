@@ -13,7 +13,7 @@ import com.main.project.API.MainJsonParser;
 import com.main.project.Database.DataBaseHelper;
 import com.main.project.Objects.User;
 import com.main.project.R;
-import com.main.project.navDrawer;
+import com.main.project.NavDrawer;
 
 import java.util.List;
 
@@ -193,7 +193,7 @@ public class SignUp extends AppCompatActivity {
         if (result != -1) {
             Toast.makeText(this, "Signup successful!", Toast.LENGTH_SHORT).show();
             // You may navigate to the next screen or perform other actions
-            Intent intent = new Intent(SignUp.this, navDrawer.class);
+            Intent intent = new Intent(SignUp.this, NavDrawer.class);
             startActivity(intent);
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 

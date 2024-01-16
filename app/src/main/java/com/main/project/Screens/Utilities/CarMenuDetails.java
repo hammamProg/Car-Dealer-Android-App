@@ -21,7 +21,7 @@ import com.main.project.R;
 import com.main.project.Screens.Auth.Login;
 import com.squareup.picasso.Picasso;
 
-public class Car_Menu_details extends Fragment {
+public class CarMenuDetails extends Fragment {
 
     private TextView carNameTextView;
     private TextView carTypeTextView;
@@ -36,7 +36,7 @@ public class Car_Menu_details extends Fragment {
     private ImageView likeButton;
     private AppCompatButton reserveButton;
     private Context context;
-    public Car_Menu_details(Context context) {
+    public CarMenuDetails(Context context) {
         this.context = context;
     }
 
