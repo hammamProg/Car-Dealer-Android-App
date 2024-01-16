@@ -44,7 +44,8 @@ public class NavDrawer extends AppCompatActivity implements NavigationView.OnNav
                 R.id.nav_home,
                 R.id.nav_car_menu,
                 R.id.nav_your_reservations,
-                R.id.nav_your_favorites
+                R.id.nav_your_favorites,
+                R.id.nav_special_offers
         )
                 .setOpenableLayout(drawer)
                 .build();
