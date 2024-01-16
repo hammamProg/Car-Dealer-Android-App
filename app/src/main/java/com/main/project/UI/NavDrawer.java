@@ -2,6 +2,7 @@ package com.main.project.UI;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.Menu;
+import android.widget.TextView;
 
 import com.google.android.material.navigation.NavigationView;
 
@@ -14,7 +15,9 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.main.project.Objects.User;
 import com.main.project.R;
+import com.main.project.Screens.Auth.Login;
 import com.main.project.databinding.ActivityNavDrawerBinding;
 
 public class NavDrawer extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -50,7 +53,9 @@ public class NavDrawer extends AppCompatActivity implements NavigationView.OnNav
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_nav_drawer);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
-
+        TextView navHeaderName = navigationView.getHeaderView(0).findViewById(R.id.User_name);
+        User user = Login.getUserFromSharedPreferences(this);
+        navHeaderName.setText(user.getFirstName() + " " + user.getLastName());
     }
 
     @Override
