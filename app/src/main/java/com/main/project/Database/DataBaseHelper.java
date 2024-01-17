@@ -484,7 +484,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     // Method to get a user by email
     public User getUserByEmail(String email) {
-
         String[] columns = {
                 COLUMN_EMAIL, COLUMN_PASSWORD, COLUMN_FIRST_NAME, COLUMN_LAST_NAME, COLUMN_GENDER,
                 COLUMN_COUNTRY, COLUMN_CITY, COLUMN_PHONE_NUMBER, COLUMN_REMEMBER_ME

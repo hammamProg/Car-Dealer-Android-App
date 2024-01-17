@@ -12,23 +12,42 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <Button
+
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/buttonCallDealer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Call Car Dealer"/>
+            android:text="Call Car Dealer"
+            android:background="@drawable/button_background"
+            android:textColor="@color/white"
+            android:layout_marginBottom="10dp"
+            android:drawableLeft="@drawable/baseline_call_24"
+            android:paddingLeft="10dp"
+            />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/buttonOpenMaps"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Locate Dealer on Maps"/>
+            android:text="Locate Dealer on Maps"
+            android:background="@drawable/button_background"
+            android:textColor="@color/white"
+            android:layout_marginBottom="10dp"
+            android:drawableLeft="@drawable/baseline_my_location_24"
+            android:paddingLeft="10dp"
+            />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/buttonOpenGmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Email Car Dealer"/>
+            android:text="Email Car Dealer"
+            android:background="@drawable/button_background"
+            android:textColor="@color/white"
+            android:layout_marginBottom="10dp"
+            android:drawableLeft="@drawable/baseline_email_24"
+            android:paddingLeft="10dp"
+            />
 
     </LinearLayout>
 

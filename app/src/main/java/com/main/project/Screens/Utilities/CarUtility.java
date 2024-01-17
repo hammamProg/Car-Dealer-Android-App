@@ -255,4 +255,51 @@ public class CarUtility {
     }
 
 
+    // Function to replace parent with a new LinearLayout containing ImageView and TextView
+    public static void replaceParentWithElements(Context context, LinearLayout parentLayout, int imageResource, String text) {
+        // Remove all child views from the parent layout
+        parentLayout.removeAllViews();
+
+        // Create new LinearLayout
+        LinearLayout linearLayout = new LinearLayout(context);
+        linearLayout.setOrientation(LinearLayout.VERTICAL);
+        linearLayout.setGravity(Gravity.CENTER);
+
+        // Create ImageView
+        ImageView imageView = new ImageView(context);
+        imageView.setImageResource(imageResource);
+
+        // Set layout parameters for ImageView
+        LinearLayout.LayoutParams imageLayoutParams = new LinearLayout.LayoutParams(
+                1000,  // Width
+                300   // Height
+        );
+        imageView.setLayoutParams(imageLayoutParams);
+
+        // Create TextView
+        TextView textView = new TextView(context);
+        textView.setText(text);
+
+        // Set layout parameters for TextView
+        LinearLayout.LayoutParams textLayoutParams = new LinearLayout.LayoutParams(
+                600,  // Width
+                ViewGroup.LayoutParams.WRAP_CONTENT   // Height
+        );
+        textView.setLayoutParams(textLayoutParams);
+
+        // Add ImageView and TextView to LinearLayout
+        linearLayout.addView(imageView);
+        linearLayout.addView(textView);
+
+        // Set layout parameters for the main LinearLayout
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,  // Width
+                ViewGroup.LayoutParams.WRAP_CONTENT   // Height
+        );
+        linearLayout.setLayoutParams(layoutParams);
+
+        // Add the new LinearLayout to the parent layout
+        parentLayout.addView(linearLayout);
+    }
+
 }

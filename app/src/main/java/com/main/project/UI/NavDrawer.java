@@ -29,8 +29,10 @@ public class NavDrawer extends AppCompatActivity implements NavigationView.OnNav
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
         binding = ActivityNavDrawerBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
 
         setSupportActionBar(binding.appBarNavDrawer.toolbar);
 
@@ -39,6 +41,7 @@ public class NavDrawer extends AppCompatActivity implements NavigationView.OnNav
 
         // Set this class as the listener for navigation item clicks
         navigationView.setNavigationItemSelectedListener(this);
+
 
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_home,
@@ -51,7 +54,6 @@ public class NavDrawer extends AppCompatActivity implements NavigationView.OnNav
         )
                 .setOpenableLayout(drawer)
                 .build();
-        //on item menu selected print hello
 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_nav_drawer);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
@@ -63,9 +65,7 @@ public class NavDrawer extends AppCompatActivity implements NavigationView.OnNav
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu, menu);
-
-        return true;
+        return false;
     }
 
     @Override
@@ -76,23 +76,7 @@ public class NavDrawer extends AppCompatActivity implements NavigationView.OnNav
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        int id = item.getItemId();
-//        if (id == R.id.nav_logout) {
-//            // Handle the logout click here
-//            Log.d("Logout", "User pressed Logout");
-//
-//            // TODO
-//            Login.removeSharedPreferences(this);
-//
-//            Intent intent = new Intent(navDrawer.this, MainActivity.class);
-//            startActivity(intent);
-//            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-//            // Add your logout logic here, such as clearing shared preferences or performing other actions
-//            return true;
-//        }
-
         // Handle other navigation item clicks
-
         DrawerLayout drawer = binding.drawerLayout;
         drawer.closeDrawer(GravityCompat.START);
         return true;
