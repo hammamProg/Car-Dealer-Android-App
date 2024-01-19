@@ -5,70 +5,93 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UI.AdminDashboard">
+    tools:context=".UI.AdminDashboard"
+    android:foregroundGravity="center"
+    >
 
-    <GridLayout
-        android:id="@+id/buttonsGridLayout"
+    <LinearLayout
+        android:id="@+id/allButtons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:rowCount="2"
-        android:columnCount="1"
-        android:layout_marginTop="30dp"
+        android:orientation="vertical"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintWidth_default="percent"
-        app:layout_constraintWidth_percent="0.8"
-        android:padding="10dp">
+        >
 
-        <androidx.appcompat.widget.AppCompatButton
+    <!-- First Row -->
+    <LinearLayout
+        android:id="@+id/buttonsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="50dp"
+        app:layout_constraintBottom_toTopOf="@id/secondButtonsLayout"
+        >
+        <Space
+            android:layout_width="10dp"
+            android:layout_height="wrap_content"/>
+        <!-- Button 1 -->
+        <ImageButton
             android:id="@+id/btnDeleteCustomers"
-            android:layout_height="80dp"
-            android:layout_width="match_parent"
-            android:text="Delete All Customers"
-            android:background="@drawable/button_background"
-            android:textColor="@color/white"
-            />
-
-        <androidx.appcompat.widget.AppCompatButton
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="50dp"
+            android:background="@drawable/rounded_button"
+            android:src="@drawable/baseline_group_remove_24"
+            android:contentDescription="delete all customers" />
+        <Space
+            android:layout_width="10dp"
+            android:layout_height="wrap_content"/>
+        <!-- Button 2 -->
+        <ImageButton
             android:id="@+id/btnAddAdmin"
-            android:layout_height="80dp"
-            android:layout_width="match_parent"
-            android:text="Add Admin"
-            android:background="@drawable/button_background"
-            android:textColor="@color/white"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="50dp"
+            android:background="@drawable/rounded_button"
+            android:src="@drawable/baseline_add_circle_24"
+            android:contentDescription="Add Admin" />
+        <Space
+            android:layout_width="10dp"
+            android:layout_height="wrap_content"/>
 
-            />
+    </LinearLayout>
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="20dp"/>
+    <!-- Second Row -->
+    <LinearLayout
+        android:id="@+id/secondButtonsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/buttonsLayout"
+        >
 
-        <androidx.appcompat.widget.AppCompatButton
+        <!-- Button 3 -->
+        <ImageButton
             android:id="@+id/btnViewReservations"
-            android:layout_height="80dp"
-            android:layout_width="match_parent"
-            android:text="View All Reservations"
-            android:background="@drawable/button_background"
-            android:textColor="@color/white"
-            />
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:background="@drawable/rounded_button"
+            android:src="@drawable/ic_menu_slideshow"
+            android:contentDescription="View All Reservations" />
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btnLogout"
-            android:layout_height="80dp"
-            android:layout_width="match_parent"
-            android:text="Logout"
-            android:background="@drawable/button_background"
-            android:textColor="@color/white"
-            />
-    </GridLayout>
+    </LinearLayout>
+
+    </LinearLayout>
+
 
     <ImageView
         android:id="@+id/adminBackgroundImage"
-        android:layout_width="0dp"
-        android:layout_height="400dp"
-        android:src="@drawable/admin_bg"
-        app:layout_constraintTop_toBottomOf="@id/buttonsGridLayout"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_width="284dp"
+        android:layout_height="304dp"
+        android:layout_marginTop="200dp"
+        android:src="@drawable/admin"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/allButtons"
         app:layout_constraintWidth_default="percent"
-        app:layout_constraintWidth_percent="0.8"
-        android:layout_marginTop="16dp"/>
+        app:layout_constraintWidth_percent="0.8" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

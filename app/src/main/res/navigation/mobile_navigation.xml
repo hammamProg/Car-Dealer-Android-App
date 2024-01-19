@@ -18,6 +18,12 @@
         tools:layout="@layout/fragment_car_menu" />
 
     <fragment
+        android:id="@+id/nav_dashboard_admin"
+        android:name="com.main.project.UI.AdminDashboard"
+        android:label="Admin"
+        tools:layout="@layout/fragment_dashboard_admin" />
+
+    <fragment
         android:id="@+id/nav_your_reservations"
         android:name="com.main.project.UI.ReservationFragment"
         android:label="@string/your_reservations"
@@ -45,8 +51,9 @@
         android:label="Call Us"
         tools:layout="@layout/fragment_call_us" />
 
-    <action
+    <fragment
         android:id="@+id/nav_logout"
-
-      />
+        android:name="com.main.project.UI.CallUsFragment"
+        android:label="Logout"
+        />
 </navigation>

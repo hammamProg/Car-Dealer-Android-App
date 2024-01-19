@@ -10,6 +10,10 @@ tools:showIn="navigation_view">
         android:title="H&amp;H" />
 
     <item
+        android:id="@+id/nav_dashboard_admin"
+        android:icon="@drawable/baseline_admin_panel_settings_24"
+        android:title="@string/admin_dashboard" />
+    <item
         android:id="@+id/nav_car_menu"
         android:icon="@drawable/car_icon"
         android:title="@string/car_menu" />

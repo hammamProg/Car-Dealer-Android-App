@@ -1,7 +1,10 @@
 package com.main.project.Database;
 
+import static com.main.project.Screens.Auth.Login.clearUserSharedPreferences;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.content.ContentValues;
@@ -352,6 +355,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             return null;
         }
     }
+    //    ================================  User Methods  ===========================================
 
     public boolean checkEmailExistence(String email) {
         SQLiteDatabase db = this.getReadableDatabase();
@@ -422,22 +426,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         }
     }
 
-
-    // Method to check if a user with the given email and password exists in the database
-    public boolean getAllUsers(String email, String password) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        String[] columns = {COLUMN_EMAIL};
-        String selection = COLUMN_EMAIL + " = ?" + " AND " + COLUMN_PASSWORD + " = ?";
-
-        String[] selectionArgs = {email, password};
-
-        Cursor cursor = db.query(TABLE_USERS, columns, selection, selectionArgs, null, null, null);
-        int count = cursor.getCount();
-        cursor.close();
-        db.close();
-
-        return count > 0;
-    }
 
     // Method to get all users from the database
     public List<User> getAllUsers() {
@@ -613,6 +601,18 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return result;
     }
 
+    //    ================================  User Methods  ===========================================
+
+
+    public int deleteAllCustomers() {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        int deletedRows = db.delete(TABLE_USERS, null, null);
+
+        db.close();
+        return deletedRows;
+    }
+
     //update user info in user table
     public long updateUser(User user) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -628,4 +628,25 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         db.close();
         return result;
     }
+
+    public void logoutUser(String email) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        // Set rememberMe to 0
+        values.put(COLUMN_REMEMBER_ME, 0);
+
+        // Update the user's rememberMe status in the database
+        db.update(TABLE_USERS, values, COLUMN_EMAIL + " = ?", new String[]{email});
+
+        // Remove SharedPreferences
+        clearUserSharedPreferences(this.context);
+
+        // Close the database
+        db.close();
+    }
+
+
+
+
 }
