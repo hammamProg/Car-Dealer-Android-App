@@ -30,7 +30,7 @@ tools:showIn="navigation_view">
         android:icon="@drawable/profile_icon"
         android:title="@string/profile" />
     <item
-        android:id="@+id/nav_calll_us_or_find_us"
+        android:id="@+id/nav_call_us"
         android:icon="@drawable/call_icon"
         android:title="@string/calll_us_or_find_us" />
     <item

@@ -1,11 +1,8 @@
 package com.main.project.Screens.Utilities;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
-
-import androidx.appcompat.widget.AppCompatButton;
-import androidx.fragment.app.Fragment;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +11,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.fragment.app.Fragment;
+
 import com.main.project.Database.DataBaseHelper;
 import com.main.project.Objects.Car;
 import com.main.project.Objects.User;
@@ -21,7 +21,7 @@ import com.main.project.R;
 import com.main.project.Screens.Auth.Login;
 import com.squareup.picasso.Picasso;
 
-public class Car_Menu_details extends Fragment {
+public class CarMenuDetails extends Fragment {
 
     private TextView carNameTextView;
     private TextView carTypeTextView;
@@ -36,7 +36,7 @@ public class Car_Menu_details extends Fragment {
     private ImageView likeButton;
     private AppCompatButton reserveButton;
     private Context context;
-    public Car_Menu_details(Context context) {
+    public CarMenuDetails(Context context) {
         this.context = context;
     }
 
@@ -57,7 +57,6 @@ public class Car_Menu_details extends Fragment {
         likeButton = view.findViewById(R.id.likeButton);
         reserveButton = view.findViewById(R.id.reserveButton);
 
-
         Car car = (Car) getArguments().getSerializable("carObject");
 
 
@@ -70,34 +69,62 @@ public class Car_Menu_details extends Fragment {
         carPriceTextView.setText("Price: "+price_str+" $");
         Picasso.get().load(car.getImage()).into(carImageView);
 
+        if(dbHelper.checkIfCarIsInFavorite(Login.getUserFromSharedPreferences(context).getEmail(), car.getId())){
+            likeButton.setImageResource(R.drawable.favourite_icon);
+        }else{
+            likeButton.setImageResource(R.drawable.unfavourite_icon);
+        }
 
 
         // => like button
         likeButton.setOnClickListener(v -> {
             // Call the addFavoriteCar method when the button is clicked
             User user = Login.getUserFromSharedPreferences(context);
-
-            // TODO - logic to check if the car is liked to this user or not
-            long result = dbHelper.addFavoriteCar(user.getEmail(), car.getId());
-            if (result != -1) {
-                Toast.makeText(context, "Car added to favorite list", Toast.LENGTH_SHORT).show();
-            } else {
-                Log.d("error"," adding favorite car");
+            if(dbHelper.checkIfCarIsInFavorite(user.getEmail(), car.getId())){
+                long result = dbHelper.deleteFavoriteCar(user.getEmail(), car.getId());
+                if (result != -1) {
+                    likeButton.setImageResource(R.drawable.unfavourite_icon);
+                } else {
+                    Log.d("error"," removing favorite car");
+                }
+            }else{
+                long result = dbHelper.addFavoriteCar(user.getEmail(), car.getId());
+                if (result != -1) {
+                    Toast.makeText(context, "Car added to favorite list", Toast.LENGTH_SHORT).show();
+                } else {
+                    Log.d("error"," adding favorite car");
+                }
             }
+            if(dbHelper.checkIfCarIsInFavorite(Login.getUserFromSharedPreferences(context).getEmail(), car.getId())){
+                likeButton.setImageResource(R.drawable.favourite_icon);
+            }else{
+                likeButton.setImageResource(R.drawable.unfavourite_icon);
+            }
+
+
         });
 
         // => reserve button
         reserveButton.setOnClickListener(v -> {
-            // Call the addFavoriteCar method when the button is clicked
-            User user = Login.getUserFromSharedPreferences(context);
 
-            // TODO - logic to check if the car is liked to this user or not
-            long result = dbHelper.reserveCar(user.getEmail(), car.getId());
-            if (result != -1) {
-                Toast.makeText(context, "Car reserved successfully", Toast.LENGTH_SHORT).show();
-            } else {
-                Log.d("error"," adding favorite car");
-            }
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            builder.setTitle("Confirm Reservation");
+            builder.setMessage("Are you sure you want to reserve this car for "+car.getPrice()+"$?");
+            // Set up the buttons
+            builder.setPositiveButton("Confirm", (dialog, which) -> {
+                User user = Login.getUserFromSharedPreferences(context);
+                long result = dbHelper.reserveCar(user.getEmail(), car.getId());
+                if (result != -1) {
+                    Toast.makeText(context, "Car reserved successfully", Toast.LENGTH_SHORT).show();
+                } else {
+                    Log.d("error","reserving a car");
+                }
+            });
+            builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+
+            AlertDialog dialog = builder.create();
+            dialog.show();
+
         });
 
         return view;

@@ -20,7 +20,7 @@ import android.widget.Toast;
 import com.main.project.Database.DataBaseHelper;
 import com.main.project.Objects.User;
 import com.main.project.R;
-import com.main.project.navDrawer;
+import com.main.project.UI.NavDrawer;
 
 import com.google.gson.Gson;
 
@@ -28,7 +28,7 @@ public class Login extends AppCompatActivity {
     private EditText email, password;
     private CheckBox checkBoxRememberMe;
     private Button buttonLogin;
-    private static String sharedMemoryName = "UserShared";
+    public static String sharedMemoryName = "UserShared";
     private DataBaseHelper dbHelper;
 
     @Override
@@ -90,7 +90,7 @@ public class Login extends AppCompatActivity {
             // -> get user data as User object
             saveUserToSharedPreferences(email_s,checked);
 
-            Intent intent = new Intent(Login.this, navDrawer.class);
+            Intent intent = new Intent(Login.this, NavDrawer.class);
             startActivity(intent);
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 

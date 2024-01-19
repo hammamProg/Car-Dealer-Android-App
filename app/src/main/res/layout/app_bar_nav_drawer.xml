@@ -5,19 +5,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 
-    tools:context=".navDrawer">
+    tools:context=".UI.NavDrawer">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/Theme.Project.AppBarOverlay">
+        android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
+        >
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/colorMain"
-            app:popupTheme="@style/Theme.Project.PopupOverlay" />
+            app:popupTheme="@style/Theme.AppCompat.NoActionBar"
+            />
 
     </com.google.android.material.appbar.AppBarLayout>
 

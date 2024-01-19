@@ -256,12 +256,11 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     //    ================================  Favorite Methods  ===========================================
 
-
-    // Method to add a new favorite car record
-    public long addFavoriteCar(String userEmail, int carId) {
+    //Method to check if car is already in favorite list
+    public boolean checkIfCarIsInFavorite(String userEmail, int carId) {
         SQLiteDatabase db = this.getReadableDatabase();
-        String[] columns = {COLUMN_CAR_ID, COLUMN_USER_EMAIL};
-        String selection = COLUMN_CAR_ID + " = ? AND " + COLUMN_USER_EMAIL + " = ?";
+        String[] columns = {COLUMN_CAR_ID_FK, COLUMN_USER_EMAIL};
+        String selection = COLUMN_CAR_ID_FK + " = ? AND " + COLUMN_USER_EMAIL + " = ?";
         String[] selectionArgs = {String.valueOf(carId), userEmail};
 
         Cursor cursor = db.query(TABLE_FAVORITE_CARS, columns, selection, selectionArgs, null, null, null);
@@ -271,9 +270,14 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         cursor.close();
         db.close();
 
-        if(count > 0) return -1;
+        // If count is greater than 0, the car with the given ID exists
+        return count > 0;
+    }
 
-        db = this.getWritableDatabase();
+    // Method to add a new favorite car record
+    public long addFavoriteCar(String userEmail, int carId) {
+        if(checkIfCarIsInFavorite(userEmail,carId)) return -1;
+        SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
         values.put(COLUMN_USER_EMAIL, userEmail);
@@ -480,7 +484,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     // Method to get a user by email
     public User getUserByEmail(String email) {
-
         String[] columns = {
                 COLUMN_EMAIL, COLUMN_PASSWORD, COLUMN_FIRST_NAME, COLUMN_LAST_NAME, COLUMN_GENDER,
                 COLUMN_COUNTRY, COLUMN_CITY, COLUMN_PHONE_NUMBER, COLUMN_REMEMBER_ME
@@ -600,4 +603,29 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return carList;
     }
 
+    public int endReservation(String userEmail, int carId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String whereClause = COLUMN_USER_EMAIL_RESERVATION + " = ? AND " + COLUMN_CAR_ID_RESERVATION + " = ?";
+        String[] whereArgs = {userEmail, String.valueOf(carId)};
+
+        int result = db.delete(TABLE_RESERVATIONS, whereClause, whereArgs);
+        db.close();
+        return result;
+    }
+
+    //update user info in user table
+    public long updateUser(User user) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_FIRST_NAME, user.getFirstName());
+        values.put(COLUMN_LAST_NAME, user.getLastName());
+        values.put(COLUMN_GENDER, user.getGender());
+        values.put(COLUMN_PASSWORD, hashPassword(user.getPassword()));
+        values.put(COLUMN_COUNTRY, user.getCountry());
+        values.put(COLUMN_CITY, user.getCity());
+        values.put(COLUMN_PHONE_NUMBER, user.getPhoneNumber());
+        long result = db.update(TABLE_USERS, values, COLUMN_EMAIL + " = ?", new String[]{user.getEmail()});
+        db.close();
+        return result;
+    }
 }

@@ -19,15 +19,32 @@
 
     <fragment
         android:id="@+id/nav_your_reservations"
-        android:name="com.main.project.UI.yourReservation_Fragment"
+        android:name="com.main.project.UI.ReservationFragment"
         android:label="@string/your_reservations"
         tools:layout="@layout/fragment_your_reservation" />
 
     <fragment
         android:id="@+id/nav_your_favorites"
-        android:name="com.main.project.UI.yourFavorites_Fragment"
+        android:name="com.main.project.UI.FavoritesFragment"
         android:label="@string/your_favorites"
         tools:layout="@layout/fragment_your_favorites" />
+    <fragment
+        android:id="@+id/nav_special_offers"
+        android:name="com.main.project.UI.SpecialOffersFragment"
+        android:label="Special Offers"
+        tools:layout="@layout/fragment_special_offers" />
+
+    <fragment
+        android:id="@+id/nav_profile"
+        android:name="com.main.project.UI.ProfileFragment"
+        android:label="Profile"
+        tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/nav_call_us"
+        android:name="com.main.project.UI.CallUsFragment"
+        android:label="Call Us"
+        tools:layout="@layout/fragment_call_us" />
+
     <action
         android:id="@+id/nav_logout"
 

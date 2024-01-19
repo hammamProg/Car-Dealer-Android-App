@@ -1,79 +1,97 @@
-package com.main.project.Screens.Auth;
+package com.main.project.UI;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.*;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+
+import com.google.gson.Gson;
 import com.main.project.API.HttpManager;
 import com.main.project.API.MainJsonParser;
 import com.main.project.Database.DataBaseHelper;
 import com.main.project.Objects.User;
 import com.main.project.R;
-import com.main.project.UI.NavDrawer;
+import com.main.project.Screens.Auth.Login;
+import com.main.project.Screens.Auth.SignUp;
+import com.main.project.Screens.Utilities.CarUtility;
+import com.main.project.databinding.FragmentHomeBinding;
 
 import java.util.List;
+import java.util.OptionalInt;
+import java.util.stream.IntStream;
 
-public class SignUp extends AppCompatActivity {
-    private EditText email,firstName,lastName,password,confirmPassword,phone;
+public class ProfileFragment extends Fragment {
+
+    private EditText firstName,lastName,password,confirmPassword,phone;
     private Spinner genderSpinner, countrySpinner, citySpinner;
-//    private CheckBox termsCheckBox; //TODO
-    private Button signUpButton;
+    //    private CheckBox termsCheckBox; //TODO
+    private Button saveButton;
     private TextView phoneNumberTextView;
-
+    User user;
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sign_up);
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup container, Bundle savedInstanceState) {
+        View root = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        // Initialize your views
-        genderSpinner = findViewById(R.id.genderSpinner);
-        countrySpinner = findViewById(R.id.countrySpinner);
-        citySpinner = findViewById(R.id.citySpinner);
-        phoneNumberTextView = findViewById(R.id.ZipAreaTextView);
+        genderSpinner = root.findViewById(R.id.genderSpinner);
+        countrySpinner = root.findViewById(R.id.countrySpinner);
+        citySpinner = root.findViewById(R.id.citySpinner);
+        phoneNumberTextView = root.findViewById(R.id.ZipAreaTextView);
 
-        email = findViewById(R.id.emailEditText);
-        firstName = findViewById(R.id.firstNameEditText);
-        lastName = findViewById(R.id.lastNameEditText);
-        genderSpinner = findViewById(R.id.genderSpinner);
-        password = findViewById(R.id.passwordSignUpEditText);
-        confirmPassword = findViewById(R.id.confirmPasswordEditText);
-        phone = findViewById(R.id.phoneNumberEditText);
-
-        // ======================================================================== Gender Spinner
-
+        user = Login.getUserFromSharedPreferences(requireContext());
+        firstName = root.findViewById(R.id.firstNameEditText);
+        firstName.setText(user.getFirstName());
+        lastName = root.findViewById(R.id.lastNameEditText);
+        lastName.setText(user.getLastName());
+        password = root.findViewById(R.id.passwordSignUpEditText);
+        confirmPassword = root.findViewById(R.id.confirmPasswordEditText);
+        phone = root.findViewById(R.id.phoneNumberEditText);
+        //put phone from the last ')' to the end
+        phone.setText(user.getPhoneNumber().substring(user.getPhoneNumber().indexOf(')')+1));
+//        phone.setText(user.getPhoneNumber().substring());
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                this,
+                getContext(),
                 R.array.gender_options,
                 android.R.layout.simple_spinner_item
         );
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         genderSpinner.setAdapter(adapter);
-
-        // ======================================================================== Country & City & Phone_zip_code Spinners
+        genderSpinner.setSelection(adapter.getPosition(user.getGender()));
         new Thread(() -> {
             // Perform background task
             // Simulating a time-consuming task
-            String countries_json=HttpManager.getData(getResources().getString(R.string.api_countries_codes)+"/codes");
+            String countries_json= HttpManager.getData(getResources().getString(R.string.api_countries_codes)+"/codes");
             List<CharSequence> dataList = MainJsonParser.extractCountriesFromJson(countries_json);
             System.out.println(countries_json);
             // Update the UI with the result on the main thread
-            runOnUiThread(() -> {
+            getActivity().runOnUiThread(() -> {
                 assert dataList != null;
-                ArrayAdapter<CharSequence> countryAdapter= new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, dataList);
-//                ArrayAdapter<CharSequence> countryAdapter2 = ArrayAdapter.createFromResource(
-//                        this,
-//                        R.array.country_options,
-//                        android.R.layout.simple_spinner_item
-//                );
+                ArrayAdapter<CharSequence> countryAdapter= new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, dataList);
                 countryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 countrySpinner.setAdapter(countryAdapter);
+                //filter the options according to the country name
+                int countryOption = IntStream.range(0, dataList.size())
+                        .filter(i -> dataList.get(i).toString().startsWith(user.getCountry()))
+                        .findFirst().getAsInt();
+                countrySpinner.setSelection(countryAdapter.getPosition(dataList.get(countryOption)));
             });
         }).start();
-
         countrySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
@@ -94,23 +112,19 @@ public class SignUp extends AppCompatActivity {
         // ####################  When Signup
 
 
-        signUpButton = findViewById(R.id.signupButton);
-        signUpButton.setOnClickListener(view -> {
-            //TODO > Check if the entered info are correct
-            signUp();
+        saveButton = root.findViewById(R.id.buttonSave);
+        saveButton.setOnClickListener(view -> {
+            save();
 
         });
-
-
-
-
+        return root;
     }
-    private void signUp() {
-        DataBaseHelper dbHelper = new DataBaseHelper(this);
+
+    private void save() {
+        DataBaseHelper dbHelper = new DataBaseHelper(requireContext());
 
         String first_Name = firstName.getText().toString().trim();
         String last_Name = lastName.getText().toString().trim();
-        String email_s = email.getText().toString().trim();
         String password_s = password.getText().toString();
         String confirm_password = confirmPassword.getText().toString();
         String phoneNumber = phone.getText().toString().trim();
@@ -119,49 +133,37 @@ public class SignUp extends AppCompatActivity {
         String city = citySpinner.getSelectedItem().toString();
 
         // Check if all fields are filled
-        if (TextUtils.isEmpty(first_Name) || TextUtils.isEmpty(last_Name) || TextUtils.isEmpty(email_s) ||
+        if (TextUtils.isEmpty(first_Name) || TextUtils.isEmpty(last_Name) ||
                 TextUtils.isEmpty(password_s) || TextUtils.isEmpty(confirm_password) || TextUtils.isEmpty(phoneNumber)) {
-            Toast.makeText(this, "All fields are required", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        // Check if the email is valid
-        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email_s).matches()) {
-            Toast.makeText(this, "Enter a valid email address", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        // Check if the email already exists
-        if (dbHelper.checkEmailExistence(email_s)) {
-            // Email already exists, show an error message or handle accordingly
-            Toast.makeText(this, "Email already exists. Please use a different email.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "All fields are required", Toast.LENGTH_SHORT).show();
             return;
         }
 
         // Check if the password meets the criteria
         if (password_s.length() < 5 || !password_s.matches(".*\\d.*") || !password_s.matches(".*[a-zA-Z].*") || !password_s.matches(".*[!@#$%^&*()-_=+{}|;:',.<>/?`~\\[\\]\\s\"].*")) {
-            Toast.makeText(this, "Password must be at least 5 characters long and include at least one letter, one number, and one special character", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "Password must be at least 5 characters long and include at least one letter, one number, and one special character", Toast.LENGTH_SHORT).show();
             return;
         }
 
         // Check if passwords match
         if (!password_s.equals(confirm_password)) {
-            Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "Passwords do not match", Toast.LENGTH_SHORT).show();
             return;
         }
 
         // Check if the phone number is valid (you may need a more robust validation based on your requirements)
         if (phoneNumber.length() < 5) {
-            Toast.makeText(this, "Enter a valid phone number", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "Enter a valid phone number", Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (first_Name.length() < 3) {
-            Toast.makeText(this, "Enter a valid first name", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "Enter a valid first name", Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (last_Name.length() < 3) {
-            Toast.makeText(this, "Enter a valid last name", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "Enter a valid last name", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -175,42 +177,35 @@ public class SignUp extends AppCompatActivity {
         String phone_start = phoneNumberTextView.getText().toString();
         phoneNumber = phone_start.concat(phoneNumber);
 
-        User newUser = new User(
-                email_s,
-                first_Name,
-                last_Name,
-                gender,
-                password_s,
-                country,
-                city,
-                phoneNumber,
-                false,
-                null
-        );
-
-        long result = dbHelper.addUser(newUser);
-
+        user.setCity(city);
+        user.setCountry(country);
+        user.setFirstName(first_Name);
+        user.setLastName(last_Name);
+        user.setGender(gender);
+        user.setPhoneNumber(phoneNumber);
+        user.setPassword(password_s);
+        long result=dbHelper.updateUser(user);
         if (result != -1) {
-            Toast.makeText(this, "Signup successful!", Toast.LENGTH_SHORT).show();
-            // You may navigate to the next screen or perform other actions
-            Intent intent = new Intent(SignUp.this, NavDrawer.class);
-            startActivity(intent);
-            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-
+            SharedPreferences preferences = getActivity().getSharedPreferences(Login.sharedMemoryName, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = preferences.edit();
+            String userJson = new Gson().toJson(user);
+            editor.putString("userJson", userJson);
+            editor.apply();
+            Toast.makeText(getContext(), "Information Updated successfully!", Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(this, "Error signing up. Please try again.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Error updating. Please try again.", Toast.LENGTH_SHORT).show();
         }
     }
 
 
     private void populateCitySpinner(String selectedCountry) {
-        Spinner citySpinner = findViewById(R.id.citySpinner);
+
         // removing the country code from the selected country
         new Thread(() -> {
             ArrayAdapter<CharSequence> cityAdapter;
             if(selectedCountry.startsWith("Palestinian Territory")){
                 cityAdapter= ArrayAdapter.createFromResource(
-                        this,
+                        requireContext(),
                         R.array.palestine_cities,
                         android.R.layout.simple_spinner_item
                 );
@@ -219,12 +214,19 @@ public class SignUp extends AppCompatActivity {
                 String citiesJSON = HttpManager.postData(getResources().getString(R.string.api_countries_codes) + "/cities", "{\"country\":\"" + country + "\"}");
                 List<CharSequence> dataList = MainJsonParser.extractCitiesFromJson(citiesJSON);
                 assert dataList != null;
-                cityAdapter= new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, dataList);
+                cityAdapter= new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, dataList);
             }
             // Update the UI with the result on the main thread
-            runOnUiThread(() -> {
+            requireActivity().runOnUiThread(() -> {
                 cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 citySpinner.setAdapter(cityAdapter);
+                //true if city is in the adapter
+                boolean cityInAdapter = IntStream.range(0, cityAdapter.getCount())
+                        .anyMatch(i -> cityAdapter.getItem(i).toString().equals(user.getCity()));
+                if(cityInAdapter){
+                    citySpinner.setSelection(cityAdapter.getPosition(user.getCity()));
+                }
+
             });
         }).start();
 

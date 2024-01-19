@@ -1,153 +1,457 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.main.project.UI.HomeFragment">
 
-    <!-- activity_history.xml -->
-    <LinearLayout
+    <ViewFlipper
+        android:id="@+id/viewFlipper"
+        android:autoStart="true"
+        android:flipInterval="4000"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="16dp"
-        android:background="@android:color/white"
-        tools:context=".HistoryActivity">
+        android:inAnimation="@anim/slide_in_right"
+        android:outAnimation="@anim/slide_out_left"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.5">
 
-        <!-- Title -->
-        <TextView
-            android:id="@+id/titleTextView"
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/h_amp_h"
-            android:textSize="24sp"
-            android:textColor="@android:color/black"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:layout_gravity="center"
-            android:layout_marginBottom="16dp"/>
+            android:orientation="vertical">
 
-        <!-- Introduction -->
-        <TextView
+            <!-- ImageView for Car Image -->
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="500dp"
+                android:layout_gravity="center_horizontal"
+                android:scaleType="centerCrop"
+                android:src="@drawable/wallpaper"/>
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="50dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="8dp"
+                android:textSize="16sp"
+                android:text="H&amp;H company at Amman"/>
+
+            <!-- TextView for Car Type -->
+            <TextView
+                android:id="@+id/carTypeTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="8dp"
+                android:textSize="14sp"
+                android:gravity="center"
+                android:text="@string/welcome_to_the_journey_of_h_h_where_passion_for_cars_meets_integrity_in_business_explore_our_history_and_commitment_to_providing_quality_vehicles_and_exceptional_service"/>
+        </LinearLayout>
+
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/welcome_to_the_journey_of_h_h_where_passion_for_cars_meets_integrity_in_business_explore_our_history_and_commitment_to_providing_quality_vehicles_and_exceptional_service"
-            android:textSize="16sp"
-            android:textColor="@android:color/black"
-            android:layout_marginBottom="16dp"/>
+            android:orientation="vertical">
 
+            <!-- ImageView for Car Image -->
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="500dp"
+                android:layout_gravity="center_horizontal"
+                android:scaleType="centerCrop"
+                android:src="@drawable/story_1"/>
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="50dp"/>
 
-        <!-- Year 1998: The Inception -->
-        <TextView
+            <!-- TextView for Car Name -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="8dp"
+                android:textSize="16sp"
+                android:text="@string/year_1998_the_inception"/>
+
+            <!-- TextView for Car Type -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="8dp"
+                android:textSize="14sp"
+                android:text="@string/in_1998_huthayfa_and_hammam_founded_h_amp_h_auto_emporium"/>
+        </LinearLayout>
+
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/year_1998_the_inception"
-            android:textSize="18sp"
-            android:textColor="@android:color/black"
-            android:textStyle="bold"
-            android:layout_marginTop="8dp"/>
+            android:orientation="vertical">
 
-        <TextView
+            <!-- ImageView for Car Image -->
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="500dp"
+                android:layout_gravity="center_horizontal"
+                android:scaleType="centerCrop"
+                android:src="@drawable/story_2"/>
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="50dp"/>
+
+            <!-- TextView for Car Name -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="8dp"
+                android:textSize="16sp"
+                android:text="@string/year_2005_driven_by_success"/>
+
+            <!-- TextView for Car Type -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="8dp"
+                android:textSize="14sp"
+                    android:gravity="center"
+
+                        android:text="@string/the_dealership_expanded_offering_a_wide_range_of_vehicles"/>
+        </LinearLayout>
+
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/in_1998_huthayfa_and_hammam_founded_h_amp_h_auto_emporium"
-            android:textSize="16sp"
-            android:textColor="@android:color/black"
-            android:layout_marginBottom="16dp"/>
+            android:orientation="vertical">
 
-        <!-- Year 2005: Driven by Success -->
-        <TextView
+            <!-- ImageView for Car Image -->
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="500dp"
+                android:layout_gravity="center_horizontal"
+                android:scaleType="centerCrop"
+                android:src="@drawable/story_3"/>
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="50dp"/>
+
+            <!-- TextView for Car Name -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="8dp"
+                android:textSize="16sp"
+                android:text="@string/year_2010_embracing_technology"/>
+
+            <!-- TextView for Car Type -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="8dp"
+                android:textSize="14sp"
+                android:gravity="center"
+                android:text="@string/h_amp_h_introduced_an_easy_to_use_website_for_online_browsing_and_test_drive_scheduling"/>
+        </LinearLayout>
+
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/year_2005_driven_by_success"
-            android:textSize="18sp"
-            android:textColor="@android:color/black"
-            android:textStyle="bold"
-            android:layout_marginTop="8dp"/>
+            android:orientation="vertical">
 
-        <TextView
+            <!-- ImageView for Car Image -->
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="500dp"
+                android:layout_gravity="center_horizontal"
+                android:scaleType="centerCrop"
+                android:src="@drawable/story_4"/>
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="50dp"/>
+
+            <!-- TextView for Car Name -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="8dp"
+                android:textSize="16sp"
+                android:text="@string/year_2015_eco_friendly_initiatives"/>
+
+            <!-- TextView for Car Type -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="8dp"
+                android:textSize="14sp"
+                android:gravity="center"
+                android:text="@string/in_response_to_environmental_concerns_h_amp_h_introduced_eco_friendly_vehicle_options_and_green_practices"/>
+        </LinearLayout>
+
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/the_dealership_expanded_offering_a_wide_range_of_vehicles"
-            android:textSize="16sp"
-            android:textColor="@android:color/black"
-            android:layout_marginBottom="16dp"/>
+            android:orientation="vertical">
 
-        <!-- Year 2010: Embracing Technology -->
-        <TextView
+            <!-- ImageView for Car Image -->
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="500dp"
+                android:layout_gravity="center_horizontal"
+                android:scaleType="centerCrop"
+                android:src="@drawable/story_5"/>
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="50dp"/>
+
+            <!-- TextView for Car Name -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="8dp"
+                android:textSize="16sp"
+                android:text="@string/year_2021_passing_the_legacy"/>
+
+            <!-- TextView for Car Type -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="8dp"
+                android:textSize="14sp"
+                android:gravity="center"
+                android:text="@string/the_next_generation_took_over_continuing_the_legacy_of_customer_satisfaction"/>
+        </LinearLayout>
+
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/year_2010_embracing_technology"
-            android:textSize="18sp"
-            android:textColor="@android:color/black"
-            android:textStyle="bold"
-            android:layout_marginTop="8dp"/>
+            android:orientation="vertical">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/h_amp_h_introduced_an_easy_to_use_website_for_online_browsing_and_test_drive_scheduling"
-            android:textSize="16sp"
-            android:textColor="@android:color/black"
-            android:layout_marginBottom="16dp"/>
+            <!-- ImageView for Car Image -->
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="500dp"
+                android:layout_gravity="center_horizontal"
+                android:scaleType="centerCrop"
+                android:src="@drawable/story_6"/>
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="50dp"/>
 
-        <!-- Year 2015: Eco-Friendly Initiatives -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/year_2015_eco_friendly_initiatives"
-            android:textSize="18sp"
-            android:textColor="@android:color/black"
-            android:textStyle="bold"
-            android:layout_marginTop="8dp"/>
+            <!-- TextView for Car Name -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="8dp"
+                android:textSize="16sp"
+                android:text="@string/present_day_h_amp_h_auto_emporium_today"/>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/in_response_to_environmental_concerns_h_amp_h_introduced_eco_friendly_vehicle_options_and_green_practices"
-            android:textSize="16sp"
-            android:textColor="@android:color/black"
-            android:layout_marginBottom="16dp"/>
+            <!-- TextView for Car Type -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="8dp"
+                android:textSize="14sp"
+                android:gravity="center"
+                android:text="@string/today_h_amp_h_auto_emporium_is_a_reputable_dealership_with_a_focus_on_quality_vehicles_and_service"/>
+        </LinearLayout>
 
-        <!-- Year 2021: Passing the Legacy -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/year_2021_passing_the_legacy"
-            android:textSize="18sp"
-            android:textColor="@android:color/black"
-            android:textStyle="bold"
-            android:layout_marginTop="8dp"/>
+    </ViewFlipper>
+<!--    &lt;!&ndash; Button to move ViewFlipper to the left &ndash;&gt;-->
+<!--    <Button-->
+<!--        android:id="@+id/btnMoveLeft"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="Left"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        android:layout_margin="16dp"-->
+<!--        android:onClick="moveLeft"/>-->
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/the_next_generation_took_over_continuing_the_legacy_of_customer_satisfaction"
-            android:textSize="16sp"
-            android:textColor="@android:color/black"
-            android:layout_marginBottom="16dp"/>
+<!--    &lt;!&ndash; Button to move ViewFlipper to the right &ndash;&gt;-->
+<!--    <Button-->
+<!--        android:id="@+id/btnMoveRight"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="Right"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        android:layout_margin="16dp"-->
+<!--        android:onClick="moveRight"/>-->
 
-        <!-- Present Day: H&H Auto Emporium Today -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/present_day_h_amp_h_auto_emporium_today"
-            android:textSize="18sp"
-            android:textColor="@android:color/black"
-            android:textStyle="bold"
-            android:layout_marginTop="8dp"/>
+<!--    &lt;!&ndash; Background Image &ndash;&gt;-->
+<!--    <ImageView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:scaleType="centerCrop"-->
+<!--        android:src="@drawable/wallpaper" />-->
+<!--    &lt;!&ndash; Transparent Overlay for Blur Effect &ndash;&gt;-->
+<!--    <View-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:background="#90000000" /> &lt;!&ndash; 80% transparent black, adjust as needed &ndash;&gt;-->
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/today_h_amp_h_auto_emporium_is_a_reputable_dealership_with_a_focus_on_quality_vehicles_and_service"
-            android:textSize="16sp"
-            android:textColor="@android:color/black"
-            android:layout_marginBottom="16dp"/>
+<!--    <ScrollView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        tools:ignore="MissingConstraints">-->
+<!--        &lt;!&ndash; activity_history.xml &ndash;&gt;-->
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:background="@android:color/transparent"-->
+<!--            android:orientation="vertical"-->
+<!--            android:padding="16dp"-->
+<!--            tools:context=".HistoryActivity">-->
+
+<!--            &lt;!&ndash; Introduction &ndash;&gt;-->
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="16dp"-->
+<!--                android:fontFamily="@font/roboto_light"-->
+<!--                android:padding="10dp"-->
+<!--                android:text="@string/welcome_to_the_journey_of_h_h_where_passion_for_cars_meets_integrity_in_business_explore_our_history_and_commitment_to_providing_quality_vehicles_and_exceptional_service"-->
+<!--                android:textColor="@android:color/white"-->
+<!--                android:textSize="16sp" />-->
 
 
-    </LinearLayout>
+<!--             Year 1998: The Inception -->
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="8dp"-->
+<!--                android:text="@string/year_1998_the_inception"-->
+<!--                android:textColor="@android:color/white"-->
+<!--                android:textSize="18sp"-->
+<!--                android:textStyle="bold" />-->
 
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="16dp"-->
+<!--                android:text="@string/in_1998_huthayfa_and_hammam_founded_h_amp_h_auto_emporium"-->
+<!--                android:textColor="@android:color/white"-->
+<!--                android:textSize="16sp" />-->
+
+<!--            &lt;!&ndash; Year 2005: Driven by Success &ndash;&gt;-->
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="8dp"-->
+<!--                android:text="@string/year_2005_driven_by_success"-->
+<!--                android:textColor="@android:color/white"-->
+<!--                android:textSize="18sp"-->
+<!--                android:textStyle="bold" />-->
+
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="16dp"-->
+<!--                android:text="@string/the_dealership_expanded_offering_a_wide_range_of_vehicles"-->
+<!--                android:textColor="@android:color/white"-->
+<!--                android:textSize="16sp" />-->
+
+<!--            <Space-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="60dp" />-->
+
+<!--            &lt;!&ndash; Year 2010: Embracing Technology &ndash;&gt;-->
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="8dp"-->
+<!--                android:text="@string/year_2010_embracing_technology"-->
+<!--                android:textColor="@android:color/white"-->
+<!--                android:textSize="18sp"-->
+<!--                android:textStyle="bold" />-->
+
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="16dp"-->
+<!--                android:text="@string/h_amp_h_introduced_an_easy_to_use_website_for_online_browsing_and_test_drive_scheduling"-->
+<!--                android:textColor="@android:color/white"-->
+<!--                android:textSize="16sp" />-->
+
+<!--            &lt;!&ndash; Year 2015: Eco-Friendly Initiatives &ndash;&gt;-->
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="8dp"-->
+<!--                android:text="@string/year_2015_eco_friendly_initiatives"-->
+<!--                android:textColor="@android:color/white"-->
+<!--                android:textSize="18sp"-->
+<!--                android:textStyle="bold" />-->
+
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="16dp"-->
+<!--                android:text="@string/in_response_to_environmental_concerns_h_amp_h_introduced_eco_friendly_vehicle_options_and_green_practices"-->
+<!--                android:textColor="@android:color/white"-->
+<!--                android:textSize="16sp" />-->
+
+<!--            &lt;!&ndash; Year 2021: Passing the Legacy &ndash;&gt;-->
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="8dp"-->
+<!--                android:text="@string/year_2021_passing_the_legacy"-->
+<!--                android:textColor="@android:color/white"-->
+<!--                android:textSize="18sp"-->
+<!--                android:textStyle="bold" />-->
+
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="16dp"-->
+<!--                android:text="@string/the_next_generation_took_over_continuing_the_legacy_of_customer_satisfaction"-->
+<!--                android:textColor="@android:color/white"-->
+<!--                android:textSize="16sp" />-->
+
+<!--            &lt;!&ndash; Present Day: H&H Auto Emporium Today &ndash;&gt;-->
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="8dp"-->
+<!--                android:text="@string/present_day_h_amp_h_auto_emporium_today"-->
+<!--                android:textColor="@android:color/white"-->
+<!--                android:textSize="18sp"-->
+<!--                android:textStyle="bold" />-->
+
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="16dp"-->
+<!--                android:text="@string/today_h_amp_h_auto_emporium_is_a_reputable_dealership_with_a_focus_on_quality_vehicles_and_service"-->
+<!--                android:textColor="@android:color/white"-->
+<!--                android:textSize="16sp" />-->
+
+
+<!--        </LinearLayout>-->
+<!--    </ScrollView>-->
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
