@@ -652,6 +652,36 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    public boolean checkIfAdmin(String email) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String[] columns = {COLUMN_IS_ADMIN};
+        String selection = COLUMN_EMAIL + " = ?";
+        String[] selectionArgs = {email};
+
+        Cursor cursor = db.query(TABLE_USERS, columns, selection, selectionArgs, null, null, null);
+
+        @SuppressLint("Range") int isAdmin = cursor.getInt(cursor.getColumnIndex(COLUMN_IS_ADMIN));
+        cursor.close();
+        db.close();
+
+        // If count is greater than 0, the car with the given ID exists
+        return isAdmin==1;
+    }
+
+    public void setAdmin (String email){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        // Set rememberMe to 0
+        values.put(COLUMN_IS_ADMIN, 1);
+
+        // Update the user's rememberMe status in the database
+        db.update(TABLE_USERS, values, COLUMN_EMAIL + " = ?", new String[]{email});
+
+        // Close the database
+        db.close();
+    }
+
 
 
 
