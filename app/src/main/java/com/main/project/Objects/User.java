@@ -4,6 +4,8 @@ import java.util.List;
 
 public class User {
     private boolean rememberMe;
+
+    private boolean isAdmin; // New field to represent admin status
     private String email;
     private String firstName;
     private String lastName;
@@ -14,9 +16,10 @@ public class User {
     private String phoneNumber;
     private List<Car> favoriteCars;  // New field to represent favorite cars
 
+
     // Constructor
     public User(String email, String firstName, String lastName, String gender, String password,
-                String country, String city, String phoneNumber, boolean rememberMe, List<Car> favoriteCars) {
+                String country, String city, String phoneNumber, boolean rememberMe, List<Car> favoriteCars, boolean isAdmin) {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -27,6 +30,7 @@ public class User {
         this.phoneNumber = phoneNumber;
         this.rememberMe = rememberMe;
         this.favoriteCars = favoriteCars;
+        this.isAdmin = isAdmin;
     }
 
     public String getEmail() {
@@ -107,5 +111,13 @@ public class User {
 
     public void setRememberMe(boolean rememberMe) {
         this.rememberMe = rememberMe;
+    }
+
+    public boolean isAdmin() {
+        return isAdmin;
+    }
+
+    public void setAdmin(boolean admin) {
+        isAdmin = admin;
     }
 }
