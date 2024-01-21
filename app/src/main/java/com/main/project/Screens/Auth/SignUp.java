@@ -1,5 +1,7 @@
 package com.main.project.Screens.Auth;
 
+import static com.main.project.Screens.Auth.Login.saveUserToSharedPreferences;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -192,7 +194,8 @@ public class SignUp extends AppCompatActivity {
 
         if (result != -1) {
             Toast.makeText(this, "Signup successful!", Toast.LENGTH_SHORT).show();
-            // You may navigate to the next screen or perform other actions
+
+            saveUserToSharedPreferences(this,email_s);
             Intent intent = new Intent(SignUp.this, NavDrawer.class);
             startActivity(intent);
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);

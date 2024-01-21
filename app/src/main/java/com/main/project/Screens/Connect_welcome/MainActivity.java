@@ -80,19 +80,6 @@ public class MainActivity extends AppCompatActivity {
 
             logo_image.startAnimation(scaleAnimation);
         });
-
-        // TODO -> implement the logout functionality & auto-logout after n-days of remember me
-        User user = Login.getUserFromSharedPreferences(this);
-        if (user != null){
-            // there's user in sharedPreference
-            Intent intent = new Intent(MainActivity.this, NavDrawer.class);
-            startActivity(intent);
-            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-        }else{
-            // there's no user ( Don't do anything )
-            Log.d("SharedMemory", "user is null");
-        }
-
     }
     public void setButtonText(String text) {
         button.setText(text);

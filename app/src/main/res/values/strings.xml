@@ -46,6 +46,7 @@
     <string name="menu_slideshow">Slideshow</string>
 
     <string name="car_menu">Car Menu</string>
+    <string name="admin_dashboard">Admin Dashboard</string>
     <string name="your_reservations">Your Reservations</string>
     <string name="your_favorites">Your Favorites</string>
     <string name="special_offers">Special Offers</string>
@@ -67,5 +68,12 @@
     <string name="present_day_h_amp_h_auto_emporium_today"><![CDATA[Present Day: H&H Today]]></string>
     <string name="today_h_amp_h_auto_emporium_is_a_reputable_dealership_with_a_focus_on_quality_vehicles_and_service"><![CDATA[Today, H&H is a reputable dealership with a focus on quality vehicles and service.]]></string>
     <string name="h_amp_h"><![CDATA[H&H]]></string>
+
+
+    <string name="title">Delete</string>
+    <string name="supporting_text">Delete All Users In Database ?</string>
+    <string name="cancel">cancel</string>
+    <string name="decline">decline</string>
+    <string name="accept">delete</string>
 
 </resources>

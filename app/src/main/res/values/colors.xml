@@ -6,7 +6,7 @@
 <!--    <color name="colorMain">#092635</color>-->
     <color name="colorMain">#3D3B40</color>
     <color name="colorSecondary">#39AFEA</color>
-    <color name="colorAccent">#F4F4FB</color>
+    <color name="colorAccent">#F7F7F7</color>
 
     <color name="navigation_bar_item_BG_color">#1B4242</color>
     <color name="navigation_bar_item_text_color">#fff</color>
