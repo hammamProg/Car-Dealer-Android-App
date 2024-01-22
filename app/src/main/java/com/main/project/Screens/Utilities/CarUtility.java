@@ -78,6 +78,7 @@ public class CarUtility {
 
 
 
+
     }
 
     private static void showCarDetails(Car car, Context context) {
@@ -93,7 +94,6 @@ public class CarUtility {
         transaction.addToBackStack(null);
         transaction.commit();
     }
-
 
 
     private static LinearLayout createLinearLayout(Context context) {

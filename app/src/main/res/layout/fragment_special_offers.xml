@@ -17,7 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="All Cars"
-            android:textSize="40dp"
+            android:textSize="20dp"
             android:padding="10dp"
             android:textStyle="bold"/>
 

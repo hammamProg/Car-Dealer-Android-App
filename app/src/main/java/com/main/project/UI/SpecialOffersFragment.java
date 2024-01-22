@@ -21,7 +21,7 @@ public class SpecialOffersFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_car_menu, container, false);
+        View root = inflater.inflate(R.layout.fragment_special_offers, container, false);
 
         dbHelper = new DataBaseHelper(requireContext());
         all_cars_view = root.findViewById(R.id.all_cars_view);
