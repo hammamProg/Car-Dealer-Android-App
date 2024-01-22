@@ -45,7 +45,7 @@ public class ReservationFragment extends Fragment {
             replaceParentWithElements(requireContext(), all_cars_view, R.drawable.man, "It looks like you haven't added any reservation to your list yet !!");
         }else{
             // Call the viewSpecificCars method
-            CarUtility.viewSpecificCars(all_cars_view, reservation_cars, requireContext(),Boolean.TRUE);
+            CarUtility.viewSpecificCars(all_cars_view, reservation_cars, requireContext(),1);
         }
 
 

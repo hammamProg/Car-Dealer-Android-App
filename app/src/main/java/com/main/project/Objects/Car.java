@@ -10,11 +10,11 @@ public class Car implements Serializable {
     private String year;
     private String color;
     private double price;
+    private double discount; // New field for discount
     private String image;
     private String reservationDate;
 
-
-    public Car(int id, String brand, String model, String type, String year, String color, double price, String image) {
+    public Car(int id, String brand, String model, String type, String year, String color, double price, double discount, String image) {
         this.id = id;
         this.brand = brand;
         this.model = model;
@@ -22,6 +22,7 @@ public class Car implements Serializable {
         this.year = year;
         this.color = color;
         this.price = price;
+        this.discount = discount;
         this.image = image;
     }
 
@@ -56,10 +57,13 @@ public class Car implements Serializable {
         return price;
     }
 
+    public double getDiscount() {
+        return discount;
+    }
+
     public String getReservationDate() {
         return reservationDate;
     }
-
 
     public String getImage() {
         return image;
@@ -93,6 +97,10 @@ public class Car implements Serializable {
         this.price = price;
     }
 
+    public void setDiscount(double discount) {
+        this.discount = discount;
+    }
+
     public void setImage(String image) {
         this.image = image;
     }
@@ -111,6 +119,7 @@ public class Car implements Serializable {
                 ", year='" + year + '\'' +
                 ", color='" + color + '\'' +
                 ", price=" + price +
+                ", discount=" + discount +
                 ", image='" + image + '\'' +
                 '}';
     }

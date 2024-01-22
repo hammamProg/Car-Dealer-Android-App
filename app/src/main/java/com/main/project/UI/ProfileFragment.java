@@ -3,6 +3,7 @@ package com.main.project.UI;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -37,17 +39,22 @@ import java.util.OptionalInt;
 import java.util.stream.IntStream;
 
 public class ProfileFragment extends Fragment {
+    private static final int PICK_IMAGE_REQUEST = 1;
 
     private EditText firstName,lastName,password,confirmPassword,phone;
     private Spinner genderSpinner, countrySpinner, citySpinner;
     //    private CheckBox termsCheckBox; //TODO
     private Button saveButton;
     private TextView phoneNumberTextView;
+    private ImageView profileAvatar;
     User user;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_profile, container, false);
+
+        profileAvatar = root.findViewById(R.id.userImageView);
+        profileAvatar.setOnClickListener(v -> pickImage());
 
         genderSpinner = root.findViewById(R.id.genderSpinner);
         countrySpinner = root.findViewById(R.id.countrySpinner);
@@ -118,6 +125,21 @@ public class ProfileFragment extends Fragment {
 
         });
         return root;
+    }
+    private void pickImage() {
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        startActivityForResult(intent, PICK_IMAGE_REQUEST);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == AppCompatActivity.RESULT_OK && data != null && data.getData() != null) {
+            Uri selectedImageUri = data.getData();
+            profileAvatar.setImageURI(selectedImageUri);
+        }
     }
 
     private void save() {

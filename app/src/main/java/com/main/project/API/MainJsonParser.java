@@ -34,6 +34,7 @@ public class MainJsonParser {
                 car.setYear(jsonObject.getString("Year"));
                 car.setColor(jsonObject.getString("Color"));
                 car.setPrice(jsonObject.getDouble("Price"));
+                car.setDiscount(jsonObject.getDouble("Discount"));
                 car.setImage(jsonObject.getString("Image"));
 
                 cars.add(car);

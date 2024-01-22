@@ -54,6 +54,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_YEAR = "year";
     private static final String COLUMN_COLOR = "color";
     private static final String COLUMN_CAR_PRICE = "price";
+    private static final String COLUMN_DISCOUNT = "discount"; // New column for discount
     private static final String COLUMN_IMAGE = "image";
 
     // Table name and column names for favorite cars
@@ -90,6 +91,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                     COLUMN_YEAR + " TEXT," +
                     COLUMN_COLOR + " TEXT," +
                     COLUMN_CAR_PRICE + " REAL," +
+                    COLUMN_DISCOUNT + " REAL," + // New column for discount with a default value of 0
                     COLUMN_IMAGE + " TEXT" +
                     ")";
 
@@ -132,6 +134,24 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_CARS);
         db.execSQL(CREATE_TABLE_FAVORITE_CARS);
         db.execSQL(CREATE_TABLE_RESERVATIONS);
+//        // Insert admin users
+//        User adminUser = new User(
+//                "admin@gmail.com",
+//                "Admin",
+//                "User",
+//                "Male",
+//                "adminPassword",
+//                "Palestine",
+//                "Jerusalem",
+//                "123456789",
+//                false,
+//                null,  // Assuming the favorite cars list is initially empty
+//                false   // Initial value for isAdmin is false
+//        );
+//        addUser(adminUser);
+//        setAdmin("admin@gmail.com");
+
+
         Toast.makeText(context, "DataBase Initialized Success!", Toast.LENGTH_SHORT).show();
     }
 
@@ -158,6 +178,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_YEAR, car.getYear());
         values.put(COLUMN_COLOR, car.getColor());
         values.put(COLUMN_CAR_PRICE, car.getPrice());
+        values.put(COLUMN_DISCOUNT, car.getDiscount());
         values.put(COLUMN_IMAGE, car.getImage());
 
         long result = db.insert(TABLE_CARS, null, values);
@@ -165,10 +186,48 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return result;
     }
 
+    public List<Car> getCarsWithDiscountGreaterThanZero() {
+        List<Car> carsList = new ArrayList<>();
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        String[] columns = {COLUMN_CAR_ID, COLUMN_BRAND, COLUMN_MODEL, COLUMN_CAR_TYPE,
+                COLUMN_YEAR, COLUMN_COLOR, COLUMN_CAR_PRICE, COLUMN_DISCOUNT, COLUMN_IMAGE};
+
+        // Define the condition for the query
+        String selection = COLUMN_DISCOUNT + " > ?";
+        String[] selectionArgs = {"0.0"};
+
+        Cursor cursor = db.query(TABLE_CARS, columns, selection, selectionArgs, null, null, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                @SuppressLint("Range") int carId = cursor.getInt(cursor.getColumnIndex(COLUMN_CAR_ID));
+                @SuppressLint("Range") String brand = cursor.getString(cursor.getColumnIndex(COLUMN_BRAND));
+                @SuppressLint("Range") String model = cursor.getString(cursor.getColumnIndex(COLUMN_MODEL));
+                @SuppressLint("Range") String carType = cursor.getString(cursor.getColumnIndex(COLUMN_CAR_TYPE));
+                @SuppressLint("Range") String year = cursor.getString(cursor.getColumnIndex(COLUMN_YEAR));
+                @SuppressLint("Range") String color = cursor.getString(cursor.getColumnIndex(COLUMN_COLOR));
+                @SuppressLint("Range") double price = cursor.getDouble(cursor.getColumnIndex(COLUMN_CAR_PRICE));
+                @SuppressLint("Range") double discount = cursor.getDouble(cursor.getColumnIndex(COLUMN_DISCOUNT));
+                @SuppressLint("Range") String image = cursor.getString(cursor.getColumnIndex(COLUMN_IMAGE));
+
+                // Create a Car object and add it to the list
+                Car car = new Car(carId, brand, model, carType, year, color, price, discount, image);
+                carsList.add(car);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+
+        return carsList;
+    }
+
+
     // Method to get all cars from the database
     public List<Car> getAllCars() {
         List<Car> carList = new ArrayList<>();
-        String[] columns = {COLUMN_CAR_ID, COLUMN_BRAND, COLUMN_MODEL, COLUMN_CAR_TYPE, COLUMN_YEAR, COLUMN_COLOR, COLUMN_CAR_PRICE, COLUMN_IMAGE};
+        String[] columns = {COLUMN_CAR_ID, COLUMN_BRAND, COLUMN_MODEL, COLUMN_CAR_TYPE, COLUMN_YEAR, COLUMN_COLOR, COLUMN_CAR_PRICE,COLUMN_DISCOUNT, COLUMN_IMAGE};
 
         try (SQLiteDatabase db = this.getReadableDatabase(); Cursor cursor = db.query(TABLE_CARS, columns, null, null, null, null, null)) {
             int carIdIndex = cursor.getColumnIndex(COLUMN_CAR_ID);
@@ -178,6 +237,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             int yearIndex = cursor.getColumnIndex(COLUMN_YEAR);
             int colorIndex = cursor.getColumnIndex(COLUMN_COLOR);
             int priceIndex = cursor.getColumnIndex(COLUMN_CAR_PRICE);
+            int discountIndex = cursor.getColumnIndex(COLUMN_DISCOUNT);
             int imageIndex = cursor.getColumnIndex(COLUMN_IMAGE);
 
             while (cursor.moveToNext()) {
@@ -188,9 +248,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 String year = cursor.getString(yearIndex);
                 String color = cursor.getString(colorIndex);
                 double price = cursor.getDouble(priceIndex);
+                double discount = cursor.getDouble(discountIndex);
                 String image = cursor.getString(imageIndex);
 
-                Car car = new Car(carId, brand, model, type, year, color, price, image);
+                Car car = new Car(carId, brand, model, type, year, color, price,discount, image);
                 carList.add(car);
             }
         } catch (Exception e) {
@@ -203,7 +264,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     // Method to get a car by its ID
     public Car getCarById(int carId) {
         SQLiteDatabase db = this.getReadableDatabase();
-        String[] columns = {COLUMN_CAR_ID, COLUMN_BRAND, COLUMN_MODEL, COLUMN_CAR_TYPE, COLUMN_YEAR, COLUMN_COLOR, COLUMN_CAR_PRICE, COLUMN_IMAGE};
+        String[] columns = {COLUMN_CAR_ID, COLUMN_BRAND, COLUMN_MODEL, COLUMN_CAR_TYPE, COLUMN_YEAR, COLUMN_COLOR, COLUMN_CAR_PRICE,COLUMN_DISCOUNT, COLUMN_IMAGE};
         String selection = COLUMN_CAR_ID + " = ?";
         String[] selectionArgs = {String.valueOf(carId)};
 
@@ -217,6 +278,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             int yearIndex = cursor.getColumnIndex(COLUMN_YEAR);
             int colorIndex = cursor.getColumnIndex(COLUMN_COLOR);
             int priceIndex = cursor.getColumnIndex(COLUMN_CAR_PRICE);
+            int discountIndex = cursor.getColumnIndex(COLUMN_DISCOUNT);
             int imageIndex = cursor.getColumnIndex(COLUMN_IMAGE);
 
             if (cursor.moveToFirst()) {
@@ -228,9 +290,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 String year = cursor.getString(yearIndex);
                 String color = cursor.getString(colorIndex);
                 double price = cursor.getDouble(priceIndex);
+                double discount = cursor.getDouble(discountIndex);
                 String image = cursor.getString(imageIndex);
 
-                car = new Car(retrievedCarId, brand, model, type, year, color, price, image);
+                car = new Car(retrievedCarId, brand, model, type, year, color, price,discount, image);
             }
         } catch (Exception e) {
             Log.e("Database Error", "Error fetching car by ID", e);
@@ -323,9 +386,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 @SuppressLint("Range") String year = cursor.getString(cursor.getColumnIndex(COLUMN_YEAR));
                 @SuppressLint("Range") String color = cursor.getString(cursor.getColumnIndex(COLUMN_COLOR));
                 @SuppressLint("Range") double price = cursor.getDouble(cursor.getColumnIndex(COLUMN_CAR_PRICE));
+                @SuppressLint("Range") double discount = cursor.getDouble(cursor.getColumnIndex(COLUMN_DISCOUNT));
                 @SuppressLint("Range") String image = cursor.getString(cursor.getColumnIndex(COLUMN_IMAGE));
 
-                Car car = new Car(carId, brand, model, type, year, color, price, image);
+                Car car = new Car(carId, brand, model, type, year, color, price,discount, image);
                 favoriteCars.add(car);
             }
         } catch (Exception e) {
@@ -575,6 +639,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             int yearIndex = cursor.getColumnIndex(COLUMN_YEAR);
             int colorIndex = cursor.getColumnIndex(COLUMN_COLOR);
             int priceIndex = cursor.getColumnIndex(COLUMN_CAR_PRICE);
+            int discountIndex = cursor.getColumnIndex(COLUMN_DISCOUNT);
             int imageIndex = cursor.getColumnIndex(COLUMN_IMAGE);
 
             while (cursor.moveToNext()) {
@@ -585,9 +650,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 String year = cursor.getString(yearIndex);
                 String color = cursor.getString(colorIndex);
                 double price = cursor.getDouble(priceIndex);
+                double discount = cursor.getDouble(discountIndex);
                 String image = cursor.getString(imageIndex);
 
-                Car car = new Car(carId, brand, model, type, year, color, price, image);
+                Car car = new Car(carId, brand, model, type, year, color, price,discount, image);
                 carList.add(car);
             }
         } catch (Exception e) {

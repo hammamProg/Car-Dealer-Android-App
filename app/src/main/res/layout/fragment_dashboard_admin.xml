@@ -30,6 +30,7 @@
             android:layout_width="10dp"
             android:layout_height="wrap_content"/>
         <!-- Button 1 -->
+
         <ImageButton
             android:id="@+id/btnDeleteCustomers"
             android:layout_width="0dp"
@@ -37,7 +38,9 @@
             android:layout_height="50dp"
             android:background="@drawable/rounded_button"
             android:src="@drawable/baseline_group_remove_24"
-            android:contentDescription="delete all customers" />
+            android:contentDescription="delete all customers"
+            />
+
         <Space
             android:layout_width="10dp"
             android:layout_height="wrap_content"/>

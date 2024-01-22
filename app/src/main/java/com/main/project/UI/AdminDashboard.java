@@ -61,7 +61,7 @@ public class AdminDashboard extends Fragment {
         return root;
     }
 
-    private void animateImageView(ImageView imageView) {
+    public static void animateImageView(ImageView imageView) {
         // Create an ObjectAnimator for scaling animation
         ObjectAnimator scaleX = ObjectAnimator.ofFloat(imageView, "scaleX", 10f, 1f);
         ObjectAnimator scaleY = ObjectAnimator.ofFloat(imageView, "scaleY", 10f, 1f);
@@ -249,7 +249,7 @@ public class AdminDashboard extends Fragment {
             replaceParentWithElements(requireContext(), all_cars_view, R.drawable.man, "It looks like there aren't any reservation yet!!");
         }else{
             // Call the viewSpecificCars method
-            CarUtility.viewSpecificCars(all_cars_view, reservation_cars, requireContext(),Boolean.TRUE);
+            CarUtility.viewSpecificCars(all_cars_view, reservation_cars, requireContext(),1);
         }
     }
 

@@ -1,11 +1,14 @@
 package com.main.project.UI;
 
+import static com.main.project.UI.AdminDashboard.animateImageView;
+
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
@@ -22,9 +25,12 @@ public class CallUsFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-//        HomeViewModel homeViewModel =
-//                new ViewModelProvider(this).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.fragment_call_us, container, false);
+
+        // Add animation to the ImageView
+        ImageView infoBackgroundImage = root.findViewById(R.id.infoBackgroundImage);
+        animateImageView(infoBackgroundImage);
+
         // Call Dealer Button
         root.findViewById(R.id.buttonCallDealer).setOnClickListener(v -> {
             Intent callIntent = new Intent(Intent.ACTION_DIAL);

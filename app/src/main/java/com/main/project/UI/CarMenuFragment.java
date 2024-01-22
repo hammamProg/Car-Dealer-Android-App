@@ -41,7 +41,7 @@ public class CarMenuFragment extends Fragment {
         all_cars_view = root.findViewById(R.id.all_cars_view);
         EditText search_bar = root.findViewById(R.id.search_bar);
         // Call the viewSpecificCars method
-        CarUtility.viewSpecificCars(all_cars_view, dbHelper.getAllCars(), requireContext());
+        CarUtility.viewSpecificCars(all_cars_view, dbHelper.getAllCars(), requireContext(),0);
         ImageView search_icon = root.findViewById(R.id.search_icon);
         search_icon.setOnClickListener(v -> {
             // Call the searchCars method
@@ -54,7 +54,7 @@ public class CarMenuFragment extends Fragment {
                 if (name != null && !(car.getBrand()+" "+car.getModel()).toLowerCase().contains(name.toLowerCase())) return false;
                 if (model != null && !car.getModel().toLowerCase().contains(model.toLowerCase())) return false;
                 return true;
-                    }).collect(Collectors.toList()), requireContext());
+                    }).collect(Collectors.toList()), requireContext(),0);
 
         });
         ImageView settings_icon = root.findViewById(R.id.settings_icon);

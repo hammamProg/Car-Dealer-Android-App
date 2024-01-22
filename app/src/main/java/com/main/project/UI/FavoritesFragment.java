@@ -48,7 +48,7 @@ public class FavoritesFragment extends Fragment {
             replaceParentWithElements(requireContext(), all_cars_view, R.drawable.man, "It looks like you haven't added any favorite items to your list yet !!");
         }else{
             // Call the viewSpecificCars method
-            CarUtility.viewSpecificCars(all_cars_view, favorite_cars, requireContext());
+            CarUtility.viewSpecificCars(all_cars_view, favorite_cars, requireContext(),0);
         }
 
         return root;

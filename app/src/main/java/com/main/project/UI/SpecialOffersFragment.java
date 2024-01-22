@@ -1,5 +1,7 @@
 package com.main.project.UI;
 
+import static com.main.project.Screens.Utilities.CarUtility.replaceParentWithElements;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,8 +12,11 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.main.project.Database.DataBaseHelper;
+import com.main.project.Objects.Car;
 import com.main.project.R;
 import com.main.project.Screens.Utilities.CarUtility;
+
+import java.util.List;
 
 public class SpecialOffersFragment extends Fragment {
 
@@ -27,8 +32,15 @@ public class SpecialOffersFragment extends Fragment {
         all_cars_view = root.findViewById(R.id.all_cars_view);
 
         // Call the viewSpecificCars method
-        CarUtility.viewSpecificCars(all_cars_view, dbHelper.getAllCars(), requireContext());
 
+        List<Car> cars_offers = dbHelper.getCarsWithDiscountGreaterThanZero();
+
+        if (cars_offers.isEmpty()) {
+            replaceParentWithElements(requireContext(), all_cars_view, R.drawable.man, "There's no offers currently, will be added soon!");
+        }else{
+            // Call the viewSpecificCars method
+            CarUtility.viewSpecificCars(all_cars_view, cars_offers, requireContext(),2);
+        }
         return root;
     }
 }

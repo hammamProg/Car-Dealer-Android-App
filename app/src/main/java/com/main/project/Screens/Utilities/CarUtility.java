@@ -30,17 +30,21 @@ import java.util.List;
 import java.util.Locale;
 
 public class CarUtility {
-    static boolean isReservationValue ;
+    static int flagValue = 0 ;
 
-    public static void viewSpecificCars(LinearLayout allCarsView, List<Car> allCars, Context context, Boolean... isReservation) {
+    public static void viewSpecificCars(LinearLayout allCarsView, List<Car> allCars, Context context, int... flag) {
         allCarsView.removeAllViews();
-        // Check if isReservation is provided
-        if (isReservation.length > 0) {
-            isReservationValue = isReservation[0];
-        }else{isReservationValue=false;}
 
+        if (flag != null) {
+            for (Integer value : flag) {
+                if (isValidFlagValue(value)) {
+                    flagValue = value;
+                    break; // Break the loop after finding the first valid value
+                }
+            }
+        }
 
-        if (isReservationValue){
+        if (flagValue==1){
             for (int i = 0; i < allCars.size(); i++) {
                 LinearLayout linearLayout1 = createLinearLayout(context);
 
@@ -55,9 +59,31 @@ public class CarUtility {
                 allCarsView.addView(space);
             }
 
-        }else{
+        }else if(flagValue==2){
+            for (int i = 0; i < allCars.size(); i++) {
+
+                LinearLayout linearLayout1 = createLinearLayout(context);
+
+                addCarView(linearLayout1, allCars.get(i), context);
+                allCarsView.addView(linearLayout1);
+
+                View space = new View(context);
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                        dpToPx(context, 8), ViewGroup.LayoutParams.MATCH_PARENT);
+                space.setLayoutParams(layoutParams);
+
+                allCarsView.addView(space);
+
+                int finalI = i;
+                linearLayout1.setOnClickListener(v -> showCarOffer(allCars.get(finalI), context));
+
+
+            }
+        }
+        else{
 
             for (int i = 0; i < allCars.size(); i++) {
+
                 LinearLayout linearLayout1 = createLinearLayout(context);
 
                 addCarView(linearLayout1, allCars.get(i), context);
@@ -72,6 +98,8 @@ public class CarUtility {
 
                 int finalI = i;
                 linearLayout1.setOnClickListener(v -> showCarDetails(allCars.get(finalI), context));
+
+
             }
         }
 
@@ -80,9 +108,25 @@ public class CarUtility {
 
 
     }
+    private static boolean isValidFlagValue(int value) {
+        return value == 0 || value == 1 || value == 2;
+    }
 
     private static void showCarDetails(Car car, Context context) {
         CarMenuDetails fragment = new CarMenuDetails(context);
+        Bundle args = new Bundle();
+
+        args.putSerializable("carObject", car);
+        fragment.setArguments(args);
+
+        FragmentTransaction transaction = ((AppCompatActivity) context)
+                .getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.pressed_car_view, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+    private static void showCarOffer(Car car, Context context) {
+        CarMenuDetailsOffers fragment = new CarMenuDetailsOffers(context);
         Bundle args = new Bundle();
 
         args.putSerializable("carObject", car);
@@ -171,8 +215,9 @@ public class CarUtility {
         //create button to end reservation
         Button endReservationButton = new Button(context);
         endReservationButton.setText("End Reservation");
+        endReservationButton.setPadding(10,2,10,2);
         endReservationButton.setBackgroundResource(R.drawable.view_background);
-        endReservationButton.setTextColor(Color.parseColor("#FFFFFF"));
+        endReservationButton.setTextColor(Color.parseColor("#000000"));
 
         // Add views to cardLayout
         cardLayout.addView(imageView);

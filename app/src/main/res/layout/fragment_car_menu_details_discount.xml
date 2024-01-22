@@ -18,7 +18,8 @@
             android:id="@+id/view_image"
             android:layout_width="wrap_content"
             android:layout_height="198dp"
-            android:src="@drawable/car1" />
+            android:src="@drawable/car1"
+            />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -64,8 +65,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textStyle="bold"
-                    android:text="4,000,000$" />
+                    android:text="10,000$ To 5,000$" />
 
+  
             </LinearLayout>
 
 
@@ -89,6 +91,13 @@
                 android:src="@drawable/unfavourite_icon" />
 
         </LinearLayout>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="90dp"
+            android:src="@drawable/discount"
+            android:scaleType="centerCrop"
+            />
     </LinearLayout>
 
 
