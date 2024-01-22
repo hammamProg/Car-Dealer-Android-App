@@ -43,6 +43,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_PHONE_NUMBER = "phone_number";
     private static final String COLUMN_REMEMBER_ME = "remember_me";
 
+    private static final String COLUMN_IS_ADMIN = "is_admin";
+
     // Table name and column names for car information
     private static final String TABLE_CARS = "cars";
     private static final String COLUMN_CAR_ID = "id";
@@ -102,7 +104,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                     COLUMN_COUNTRY + " TEXT," +
                     COLUMN_CITY + " TEXT," +
                     COLUMN_PHONE_NUMBER + " TEXT," +
-                    COLUMN_REMEMBER_ME + " INTEGER DEFAULT 0" +
+                    COLUMN_REMEMBER_ME + " INTEGER DEFAULT 0," +
+                    COLUMN_IS_ADMIN + " INTEGER DEFAULT 0" +
                     ")";
 
     // SQL query to create the favorite_cars table
@@ -432,7 +435,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         List<User> userList = new ArrayList<>();
 
         String[] columns = {COLUMN_EMAIL, COLUMN_PASSWORD, COLUMN_FIRST_NAME, COLUMN_LAST_NAME, COLUMN_GENDER,
-                COLUMN_COUNTRY, COLUMN_CITY, COLUMN_PHONE_NUMBER, COLUMN_REMEMBER_ME};
+                COLUMN_COUNTRY, COLUMN_CITY, COLUMN_PHONE_NUMBER, COLUMN_REMEMBER_ME, COLUMN_IS_ADMIN};
         try (SQLiteDatabase db = this.getReadableDatabase(); Cursor cursor = db.query(TABLE_USERS, columns, null, null, null, null, null)) {
             int emailIndex = cursor.getColumnIndex(COLUMN_EMAIL);
             int firstNameIndex = cursor.getColumnIndex(COLUMN_FIRST_NAME);
@@ -443,6 +446,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             int cityIndex = cursor.getColumnIndex(COLUMN_CITY);
             int phoneNumberIndex = cursor.getColumnIndex(COLUMN_PHONE_NUMBER);
             int rememberMeIndex = cursor.getColumnIndex(COLUMN_REMEMBER_ME);
+            int isAdminIndex = cursor.getColumnIndex(COLUMN_IS_ADMIN);
 
             while (cursor.moveToNext()) {
                 String email = cursor.getString(emailIndex);
@@ -456,7 +460,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 int rememberMe = cursor.getInt(rememberMeIndex);
                 boolean rememberMe_bool = rememberMe == 1;
                 List<Car> favoriteCars = getFavoriteCars(email);
-                User user = new User(email, firstName, lastName, gender, password, country, city, phoneNumber, rememberMe_bool, favoriteCars);
+                boolean isAdmin = cursor.getInt(isAdminIndex)==1;
+                User user = new User(email, firstName, lastName, gender, password, country, city, phoneNumber, rememberMe_bool, favoriteCars, isAdmin);
 
                 // Set the rememberMe field in the User object
                 user.setRememberMe(rememberMe == 1);
@@ -474,7 +479,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public User getUserByEmail(String email) {
         String[] columns = {
                 COLUMN_EMAIL, COLUMN_PASSWORD, COLUMN_FIRST_NAME, COLUMN_LAST_NAME, COLUMN_GENDER,
-                COLUMN_COUNTRY, COLUMN_CITY, COLUMN_PHONE_NUMBER, COLUMN_REMEMBER_ME
+                COLUMN_COUNTRY, COLUMN_CITY, COLUMN_PHONE_NUMBER, COLUMN_REMEMBER_ME, COLUMN_IS_ADMIN
         };
         String selection = COLUMN_EMAIL + " = ?";
         String[] selectionArgs = {email};
@@ -489,12 +494,13 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 @SuppressLint("Range") String city = cursor.getString(cursor.getColumnIndex(COLUMN_CITY));
                 @SuppressLint("Range") String phoneNumber = cursor.getString(cursor.getColumnIndex(COLUMN_PHONE_NUMBER));
                 @SuppressLint("Range") int rememberMeIndex = cursor.getInt(cursor.getColumnIndex(COLUMN_REMEMBER_ME));
+                @SuppressLint("Range") boolean isAdminIndex = cursor.getInt(cursor.getColumnIndex(COLUMN_IS_ADMIN))==1;
 
                 boolean rememberMe_bool = (rememberMeIndex == 1);
 
                 List<Car> favoriteCars = getFavoriteCars(retrievedEmail);
 
-                return new User(retrievedEmail, firstName, lastName, gender, retrievedPassword, country, city, phoneNumber, rememberMe_bool, favoriteCars);
+                return new User(retrievedEmail, firstName, lastName, gender, retrievedPassword, country, city, phoneNumber, rememberMe_bool, favoriteCars, isAdminIndex);
             } else {
                 return null; // User not found
             }
@@ -646,7 +652,71 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    public boolean checkIfAdmin(String email) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String[] columns = {COLUMN_IS_ADMIN};
+        String selection = COLUMN_EMAIL + " = ?";
+        String[] selectionArgs = {email};
+
+        Cursor cursor = db.query(TABLE_USERS, columns, selection, selectionArgs, null, null, null);
+
+        @SuppressLint("Range") int isAdmin = cursor.getInt(cursor.getColumnIndex(COLUMN_IS_ADMIN));
+        cursor.close();
+        db.close();
+
+        // If count is greater than 0, the car with the given ID exists
+        return isAdmin==1;
+    }
+
+    public void setAdmin (String email){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        // Set rememberMe to 0
+        values.put(COLUMN_IS_ADMIN, 1);
+
+        // Update the user's rememberMe status in the database
+        db.update(TABLE_USERS, values, COLUMN_EMAIL + " = ?", new String[]{email});
+
+        // Close the database
+        db.close();
+    }
 
 
+    public int deleteUser(String selectedUserEmail) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String whereClause = COLUMN_EMAIL + " = ?";
+        String[] whereArgs = {selectedUserEmail};
 
+        int result = db.delete(TABLE_USERS, whereClause, whereArgs);
+        db.close();
+        return result;
+    }
+
+    public List<Car> getUsersReservations() {
+        List<Car> reservedCars = new ArrayList<>();
+
+        String[] columns = {COLUMN_CAR_ID_RESERVATION, COLUMN_RESERVATION_DATE};
+        try (SQLiteDatabase db = this.getReadableDatabase(); Cursor cursor = db.query(TABLE_RESERVATIONS, columns, null, null, null, null, null)) {
+            while (cursor.moveToNext()) {
+                @SuppressLint("Range") int carId = cursor.getInt(cursor.getColumnIndex(COLUMN_CAR_ID_RESERVATION));
+                @SuppressLint("Range") String reservationDate = cursor.getString(cursor.getColumnIndex(COLUMN_RESERVATION_DATE));
+
+                // Retrieve car details for each reservation
+                Car car = getCarById(carId);
+
+                if (car != null) {
+                    // Set the reservation date for the reserved car
+                    car.setReservationDate(reservationDate);
+
+                    // Add the reserved car to the list
+                    reservedCars.add(car);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return reservedCars;
+    }
 }

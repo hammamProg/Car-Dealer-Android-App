@@ -45,21 +45,36 @@ public class NavDrawer extends AppCompatActivity{
         DrawerLayout drawer = binding.drawerLayout;
         NavigationView navigationView = binding.navView;
 
-
-        mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home,
-                R.id.nav_dashboard_admin,
-                R.id.nav_car_menu,
-                R.id.nav_your_reservations,
-                R.id.nav_your_favorites,
-                R.id.nav_special_offers,
-                R.id.nav_profile,
-                R.id.nav_call_us,
-                R.id.nav_logout
-        )
-                .setOpenableLayout(drawer)
-                .build();
-
+        if(Login.getUserFromSharedPreferences(this).isAdmin()) {
+            navigationView.getMenu().findItem(R.id.nav_dashboard_admin).setVisible(true);
+            mAppBarConfiguration = new AppBarConfiguration.Builder(
+                    R.id.nav_home,
+                    R.id.nav_dashboard_admin,
+                    R.id.nav_car_menu,
+                    R.id.nav_your_reservations,
+                    R.id.nav_your_favorites,
+                    R.id.nav_special_offers,
+                    R.id.nav_profile,
+                    R.id.nav_call_us,
+                    R.id.nav_logout
+            )
+                    .setOpenableLayout(drawer)
+                    .build();
+        } else {
+            navigationView.getMenu().findItem(R.id.nav_dashboard_admin).setVisible(false);
+            mAppBarConfiguration = new AppBarConfiguration.Builder(
+                    R.id.nav_home,
+                    R.id.nav_car_menu,
+                    R.id.nav_your_reservations,
+                    R.id.nav_your_favorites,
+                    R.id.nav_special_offers,
+                    R.id.nav_profile,
+                    R.id.nav_call_us,
+                    R.id.nav_logout
+            )
+                    .setOpenableLayout(drawer)
+                    .build();
+        }
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_nav_drawer);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);

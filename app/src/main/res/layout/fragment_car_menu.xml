@@ -20,11 +20,13 @@
             android:background="@drawable/customborder">
 
             <ImageView
+                android:id="@+id/search_icon"
                 android:layout_width="40dp"
                 android:layout_height="match_parent"
                 android:src="@drawable/baseline_search_24"/>
 
             <EditText
+                android:id="@+id/search_bar"
                 android:layout_width="284dp"
                 android:layout_height="match_parent"
                 android:background="@null"
@@ -38,6 +40,7 @@
                 android:textSize="20dp"/>
 
             <ImageView
+                android:id="@+id/settings_icon"
                 android:layout_width="40dp"
                 android:layout_height="match_parent"
                 android:src="@drawable/baseline_settings_24"/>
