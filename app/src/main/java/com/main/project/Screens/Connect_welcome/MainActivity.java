@@ -37,7 +37,6 @@ public class MainActivity extends AppCompatActivity {
 
         dbHelper = new DataBaseHelper(this);
 
-
         setProgress(false);
         button = (Button) findViewById(R.id.connectButton);
 

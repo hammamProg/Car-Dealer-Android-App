@@ -134,22 +134,35 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_CARS);
         db.execSQL(CREATE_TABLE_FAVORITE_CARS);
         db.execSQL(CREATE_TABLE_RESERVATIONS);
-//        // Insert admin users
-//        User adminUser = new User(
-//                "admin@gmail.com",
-//                "Admin",
-//                "User",
-//                "Male",
-//                "adminPassword",
-//                "Palestine",
-//                "Jerusalem",
-//                "123456789",
-//                false,
-//                null,  // Assuming the favorite cars list is initially empty
-//                false   // Initial value for isAdmin is false
-//        );
-//        addUser(adminUser);
-//        setAdmin("admin@gmail.com");
+
+        User adminUser = new User(
+                "admin@gmail.com",
+                "Admin",
+                "User",
+                "Male",
+                "adminPassword",
+                "Jordan",
+                "Amman",
+                "(+962)1234569",
+                false,
+                null,  // Assuming the favorite cars list is initially empty
+                true
+        );
+
+        ContentValues values = new ContentValues();
+
+        values.put(COLUMN_EMAIL, adminUser.getEmail());
+        values.put(COLUMN_FIRST_NAME, adminUser.getFirstName());
+        values.put(COLUMN_LAST_NAME, adminUser.getLastName());
+        values.put(COLUMN_GENDER, adminUser.getGender());
+        values.put(COLUMN_PASSWORD, hashPassword(adminUser.getPassword()));
+        values.put(COLUMN_COUNTRY, adminUser.getCountry());
+        values.put(COLUMN_CITY, adminUser.getCity());
+        values.put(COLUMN_PHONE_NUMBER, adminUser.getPhoneNumber());
+        values.put(COLUMN_IS_ADMIN, adminUser.isAdmin());
+
+        long result = db.insertWithOnConflict(TABLE_USERS, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+
 
 
         Toast.makeText(context, "DataBase Initialized Success!", Toast.LENGTH_SHORT).show();
