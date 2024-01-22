@@ -692,4 +692,31 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         db.close();
         return result;
     }
+
+    public List<Car> getUsersReservations() {
+        List<Car> reservedCars = new ArrayList<>();
+
+        String[] columns = {COLUMN_CAR_ID_RESERVATION, COLUMN_RESERVATION_DATE};
+        try (SQLiteDatabase db = this.getReadableDatabase(); Cursor cursor = db.query(TABLE_RESERVATIONS, columns, null, null, null, null, null)) {
+            while (cursor.moveToNext()) {
+                @SuppressLint("Range") int carId = cursor.getInt(cursor.getColumnIndex(COLUMN_CAR_ID_RESERVATION));
+                @SuppressLint("Range") String reservationDate = cursor.getString(cursor.getColumnIndex(COLUMN_RESERVATION_DATE));
+
+                // Retrieve car details for each reservation
+                Car car = getCarById(carId);
+
+                if (car != null) {
+                    // Set the reservation date for the reserved car
+                    car.setReservationDate(reservationDate);
+
+                    // Add the reserved car to the list
+                    reservedCars.add(car);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return reservedCars;
+    }
 }

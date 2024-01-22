@@ -1,5 +1,7 @@
 package com.main.project.UI;
 
+import static com.main.project.Screens.Utilities.CarUtility.replaceParentWithElements;
+
 import android.animation.ObjectAnimator;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -10,26 +12,34 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.main.project.Database.DataBaseHelper;
+import com.main.project.Objects.Car;
+import com.main.project.Objects.User;
 import com.main.project.R;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.main.project.Screens.Auth.Login;
+import com.main.project.Screens.Utilities.CarUtility;
+
+import java.util.List;
 
 
 public class AdminDashboard extends Fragment {
     DataBaseHelper dbHelper;
-
+    LinearLayout all_cars_view;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_dashboard_admin, container, false);
         dbHelper = new DataBaseHelper(requireContext());
+        all_cars_view= root.findViewById(R.id.all_cars_view);
+
         // Add animation to the ImageView
         ImageView adminBackgroundImage = root.findViewById(R.id.adminBackgroundImage);
         animateImageView(adminBackgroundImage);
@@ -40,6 +50,10 @@ public class AdminDashboard extends Fragment {
         });
         root.findViewById(R.id.btnAddAdmin).setOnClickListener(v -> {
             addAdmin(getContext());
+
+        });
+        root.findViewById(R.id.btnViewReservations).setOnClickListener(v -> {
+            showReservations(getContext());
 
         });
 
@@ -83,6 +97,8 @@ public class AdminDashboard extends Fragment {
     }
 
     public void addAdmin(Context context) {
+        // Clear all_cars_view
+        all_cars_view.removeAllViews();
         // Create an AlertDialog builder
         final int[] chosenOption = {0};
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -146,6 +162,8 @@ public class AdminDashboard extends Fragment {
     }
 
     public void deleteAUser(Context context){
+        // Clear all_cars_view
+        all_cars_view.removeAllViews();
         // Create an AlertDialog builder
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
@@ -223,5 +241,16 @@ public class AdminDashboard extends Fragment {
         dialog.show();
     }
 
+    public void showReservations(Context context) {
+        // check if there're any reservation, if non add @drawable/man ImageView + "it looks like you haven't added any favorite items to your list yet" TextView
+        List<Car> reservation_cars = dbHelper.getUsersReservations();
+
+        if (reservation_cars.isEmpty()) {
+            replaceParentWithElements(requireContext(), all_cars_view, R.drawable.man, "It looks like there aren't any reservation yet!!");
+        }else{
+            // Call the viewSpecificCars method
+            CarUtility.viewSpecificCars(all_cars_view, reservation_cars, requireContext(),Boolean.TRUE);
+        }
+    }
 
 }
