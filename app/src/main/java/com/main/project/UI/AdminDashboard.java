@@ -1,8 +1,10 @@
 package com.main.project.UI;
 
 import android.animation.ObjectAnimator;
+import android.app.AlertDialog;
 import android.content.Context;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +19,7 @@ import com.main.project.Database.DataBaseHelper;
 import com.main.project.R;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.main.project.Screens.Auth.Login;
 
 
 public class AdminDashboard extends Fragment {
@@ -32,10 +35,13 @@ public class AdminDashboard extends Fragment {
         animateImageView(adminBackgroundImage);
 
         root.findViewById(R.id.btnDeleteCustomers).setOnClickListener(v -> {
-            showMaterialAlertDialog(getContext());
+            deleteAUser(getContext());
 
         });
-        
+        root.findViewById(R.id.btnAddAdmin).setOnClickListener(v -> {
+            addAdmin(getContext());
+
+        });
 
 
         return root;
@@ -75,5 +81,147 @@ public class AdminDashboard extends Fragment {
                 })
                 .show();
     }
+
+    public void addAdmin(Context context) {
+        // Create an AlertDialog builder
+        final int[] chosenOption = {0};
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
+        // Set the message and title for the dialog (optional)
+        builder.setTitle("Choose a User to be an Admin");
+        // Get admin emails with the name
+        String[] options = dbHelper.getAllUsers().stream() // Get all users
+                .filter(user -> !user.isAdmin()) // Filter out admins
+                .map(user -> user.getFirstName() + " " + user.getLastName() + " (" + user.getEmail() + ")") // Map to name (email)
+                .toArray(String[]::new); // Convert to String array
+        builder.setItems(options, (dialog, which) -> {
+            // Handle option selection
+            // 'which' is the index of the selected item
+            chosenOption[0] = which;
+        });
+
+        // Add Apply button
+        builder.setPositiveButton("Apply", (dialog, id) -> {
+            //change the user to admin
+            // close the current dialog and show an are you sure dialog
+            String selectedUser = options[chosenOption[0]];
+            // Get the email from the selected user
+            String selectedUserEmail = selectedUser.substring(selectedUser.lastIndexOf("(") + 1, selectedUser.lastIndexOf(")"));
+            // Make the user an admin
+            dbHelper.setAdmin(selectedUserEmail);
+            // Show a success message
+            Toast.makeText(context, "User " + selectedUserEmail + " is now an admin", Toast.LENGTH_SHORT).show();
+            dialog.dismiss();
+//            new MaterialAlertDialogBuilder(context)
+//                    .setTitle("Are you sure?")
+//                    .setMessage("Are you sure you want to make this user "+options[chosenOption[0]]+" an admin?")
+//                    .setNeutralButton("Cancel", (dialog1, which) -> {
+//                        // Cancel the dialog
+//                        dialog1.dismiss();
+//                    })
+//                    .setPositiveButton("Yes", (dialog1, which) -> {
+//                        // Respond to positive button press
+//                        // Get the selected user
+//                        String selectedUser = options[chosenOption[0]];
+//                        // Get the email from the selected user
+//                        String selectedUserEmail = selectedUser.substring(selectedUser.lastIndexOf("(") + 1, selectedUser.lastIndexOf(")"));
+//                        // Make the user an admin
+//                        dbHelper.setAdmin(selectedUserEmail);
+//                        // Show a success message
+//                        Toast.makeText(context, "User " + selectedUserEmail + " is now an admin", Toast.LENGTH_SHORT).show();
+//                    })
+//                    .show();
+
+        });
+
+        // Add Cancel button
+        builder.setNegativeButton("Cancel", (dialog, id) -> {
+            // close the dialog
+            dialog.dismiss();
+        });
+
+        // Create and show the AlertDialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    public void deleteAUser(Context context){
+        // Create an AlertDialog builder
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
+        // Set the message and title for the dialog (optional)
+//        builder.setTitle("Choose a User to be an Admin");
+        String[] options = dbHelper.getAllUsers().stream() // Get all users
+//                .filter(user -> !user.isAdmin()) // Filter out admins
+                .filter(user -> !user.getEmail().equals(Login.getUserFromSharedPreferences(context).getEmail()))
+                .map(user -> user.getFirstName() + " " + user.getLastName() + " (" + user.getEmail() + ")") // Map to name (email)
+                .toArray(String[]::new); // Convert to String array
+
+        final int[] chosenOption = {0}; // To hold the selection
+        builder.setTitle("Choose a User to delete.")
+
+        // Get admin emails with the name
+
+
+
+
+        // Add Apply button
+        .setPositiveButton("Apply", (dialog, id) -> {
+            //change the user to admin
+            // close the current dialog and show an are you sure dialog
+            String selectedUser = options[chosenOption[0]];
+            // Get the email from the selected user
+            String selectedUserEmail = selectedUser.substring(selectedUser.lastIndexOf("(") + 1, selectedUser.lastIndexOf(")"));
+
+            // Delete the user
+            dbHelper.deleteUser(selectedUserEmail);
+            // Show a success message
+            Toast.makeText(context, "User " + selectedUserEmail + " is now deleted", Toast.LENGTH_SHORT).show();
+//            dialog.dismiss();
+
+//            new AlertDialog.Builder(context)
+//                    .setTitle("Are you sure?")
+////                    .setMessage("Are you sure you want to make this user an admin?")
+//                    .setMessage("Are you sure you want to delete this user "+options[chosenOption[0]]+
+//                            "?")
+//                    .setNegativeButton("Cancel", (dialog1, which) -> {
+//                        // Cancel the dialog
+////                        dialog1.dismiss();
+////                        dialog.dismiss();
+//                    })
+//                    .setPositiveButton("Yes", (dialog1, which) -> {
+//                        // Respond to positive button press
+//                        // Get the selected user
+//                        String selectedUser = options[chosenOption[0]];
+//                        // Get the email from the selected user
+//                        String selectedUserEmail = selectedUser.substring(selectedUser.lastIndexOf("(") + 1, selectedUser.lastIndexOf(")"));
+//
+//                        // Delete the user
+//                        dbHelper.deleteUser(selectedUserEmail);
+//                        // Show a success message
+//                        Toast.makeText(context, "User " + selectedUserEmail + " is now deleted", Toast.LENGTH_SHORT).show();
+////                        dialog.dismiss();
+//
+//                    }).create()
+//                    .show();
+
+        })
+
+        // Add Cancel button
+        .setNegativeButton("Cancel", (dialog, id) -> {
+            // close the dialog
+            dialog.dismiss();
+        })
+                // Add options to the dialog as a single choice list
+        .setSingleChoiceItems(options, 0, (dialog, which) -> {
+            // 'which' is the index of the selected item
+            chosenOption[0] = which;
+        });
+
+        // Create and show the AlertDialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
 
 }

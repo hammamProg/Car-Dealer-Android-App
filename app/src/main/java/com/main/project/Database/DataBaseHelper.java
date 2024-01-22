@@ -683,6 +683,13 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
 
 
+    public int deleteUser(String selectedUserEmail) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String whereClause = COLUMN_EMAIL + " = ?";
+        String[] whereArgs = {selectedUserEmail};
 
-
+        int result = db.delete(TABLE_USERS, whereClause, whereArgs);
+        db.close();
+        return result;
+    }
 }
